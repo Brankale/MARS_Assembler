@@ -493,8 +493,6 @@ public class VenusUI extends JFrame {
         edit.setMnemonic(KeyEvent.VK_E);
         run = new JMenu("Run");
         run.setMnemonic(KeyEvent.VK_R);
-        //window = new JMenu("Window");
-        //window.setMnemonic(KeyEvent.VK_W);
         settings = new JMenu("Settings");
         settings.setMnemonic(KeyEvent.VK_S);
         help = new JMenu("Help");
@@ -661,10 +659,6 @@ public class VenusUI extends JFrame {
             menuBar.add(toolMenu);
         }
         menuBar.add(help);
-
-        // experiment with popup menu for settings. 3 Aug 2006 PS
-        //setupPopupMenu();
-
         return menuBar;
     }
 
@@ -774,7 +768,7 @@ public class VenusUI extends JFrame {
                 setMenuStateEditingNew();
                 break;
             case FileStatus.NOT_EDITED:
-                setMenuStateNotEdited(); // was MenuStateEditing. DPS 9-Aug-2011
+                setMenuStateNotEdited();
                 break;
             case FileStatus.EDITED:
                 setMenuStateEditing();
@@ -788,7 +782,7 @@ public class VenusUI extends JFrame {
             case FileStatus.TERMINATED:
                 setMenuStateTerminated();
                 break;
-            case FileStatus.OPENING:// This is a temporary state. DPS 9-Aug-2011
+            case FileStatus.OPENING:
                 break;
             default:
                 System.out.println("Invalid File Status: " + status);
@@ -814,8 +808,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(false);
         editFindReplaceAction.setEnabled(false);
         editSelectAllAction.setEnabled(false);
-        settingsDelayedBranchingAction.setEnabled(true); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(true); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(true);
+        settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(false);
         runGoAction.setEnabled(false);
         runStepAction.setEnabled(false);
@@ -857,7 +851,7 @@ public class VenusUI extends JFrame {
         settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(true);
         // If assemble-all, allow previous Run menu settings to remain.
-        // Otherwise, clear them out.  DPS 9-Aug-2011
+        // Otherwise, clear them out.
         if (!Globals.getSettings().getBooleanSetting(mars.Settings.ASSEMBLE_ALL_ENABLED)) {
             runGoAction.setEnabled(false);
             runStepAction.setEnabled(false);
@@ -891,8 +885,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(true);
         editFindReplaceAction.setEnabled(true);
         editSelectAllAction.setEnabled(true);
-        settingsDelayedBranchingAction.setEnabled(true); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(true); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(true);
+        settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(true);
         runGoAction.setEnabled(false);
         runStepAction.setEnabled(false);
@@ -928,8 +922,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(true);
         editFindReplaceAction.setEnabled(true);
         editSelectAllAction.setEnabled(true);
-        settingsDelayedBranchingAction.setEnabled(true); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(true); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(true);
+        settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(false);
         runGoAction.setEnabled(false);
         runStepAction.setEnabled(false);
@@ -965,8 +959,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(true);
         editFindReplaceAction.setEnabled(true);
         editSelectAllAction.setEnabled(true);
-        settingsDelayedBranchingAction.setEnabled(true); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(true); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(true);
+        settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(true);
         runGoAction.setEnabled(true);
         runStepAction.setEnabled(true);
@@ -1001,8 +995,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(false);
         editFindReplaceAction.setEnabled(false);
         editSelectAllAction.setEnabled(false);
-        settingsDelayedBranchingAction.setEnabled(false); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(false); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(false);
+        settingsMemoryConfigurationAction.setEnabled(false);
         runAssembleAction.setEnabled(false);
         runGoAction.setEnabled(false);
         runStepAction.setEnabled(false);
@@ -1013,8 +1007,8 @@ public class VenusUI extends JFrame {
         runToggleBreakpointsAction.setEnabled(false);
         helpHelpAction.setEnabled(true);
         helpAboutAction.setEnabled(true);
-        editUndoAction.setEnabled(false);//updateUndoState(); // DPS 10 Jan 2008
-        editRedoAction.setEnabled(false);//updateRedoState(); // DPS 10 Jan 2008
+        editUndoAction.setEnabled(false);
+        editRedoAction.setEnabled(false);
     }
 
     /**
@@ -1037,8 +1031,8 @@ public class VenusUI extends JFrame {
         editPasteAction.setEnabled(true);
         editFindReplaceAction.setEnabled(true);
         editSelectAllAction.setEnabled(true);
-        settingsDelayedBranchingAction.setEnabled(true); // added 25 June 2007
-        settingsMemoryConfigurationAction.setEnabled(true); // added 21 July 2009
+        settingsDelayedBranchingAction.setEnabled(true);
+        settingsMemoryConfigurationAction.setEnabled(true);
         runAssembleAction.setEnabled(true);
         runGoAction.setEnabled(false);
         runStepAction.setEnabled(false);
@@ -1054,7 +1048,7 @@ public class VenusUI extends JFrame {
     }
 
     /**
-     * Get current menu state.  State values are constants in FileStatus class.  DPS 23 July 2008
+     * Get current menu state.  State values are constants in FileStatus class.
      *
      * @return current menu state.
      */
@@ -1163,14 +1157,14 @@ public class VenusUI extends JFrame {
     }
 
     /**
-     * Have the menu request keyboard focus.  DPS 5-4-10
+     * Have the menu request keyboard focus.
      */
     public void haveMenuRequestFocus() {
         this.menu.requestFocus();
     }
 
     /**
-     * Send keyboard event to menu for possible processing.  DPS 5-4-10
+     * Send keyboard event to menu for possible processing.
      *
      * @param evt KeyEvent for menu component to consider for processing.
      */
