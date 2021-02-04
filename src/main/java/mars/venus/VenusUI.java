@@ -212,7 +212,7 @@ public class VenusUI extends JFrame {
         registersTab = new RegistersWindow();
         coprocessor1Tab = new Coprocessor1Window();
         coprocessor0Tab = new Coprocessor0Window();
-        registersPane = new RegistersPane(mainUI, registersTab, coprocessor1Tab, coprocessor0Tab);
+        registersPane = new RegistersPane(registersTab, coprocessor1Tab, coprocessor0Tab);
     }
 
     /**

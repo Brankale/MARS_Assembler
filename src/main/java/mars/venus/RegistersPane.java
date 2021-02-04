@@ -32,25 +32,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Contains tabbed areas in the UI to display register contents
- *
- * @author Sanderson
- * @version August 2005
- **/
-
+ */
 public class RegistersPane extends JTabbedPane {
-    RegistersWindow regsTab;
-    Coprocessor1Window cop1Tab;
-    Coprocessor0Window cop0Tab;
 
-    private VenusUI mainUI;
+    private final RegistersWindow regsTab;
+    private final Coprocessor1Window cop1Tab;
+    private final Coprocessor0Window cop0Tab;
 
     /**
      * Constructor for the RegistersPane class.
-     **/
-
-    public RegistersPane(VenusUI appFrame, RegistersWindow regs, Coprocessor1Window cop1,
-                         Coprocessor0Window cop0) {
-        this.mainUI = appFrame;
+     */
+    public RegistersPane(RegistersWindow regs,
+                         Coprocessor1Window cop1,
+                         Coprocessor0Window cop0
+    ) {
         regsTab = regs;
         cop1Tab = cop1;
         cop0Tab = cop0;

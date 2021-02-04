@@ -61,9 +61,6 @@ public abstract class Instruction {
      */
     protected String exampleFormat;
 
-    /**
-     * Instruction description
-     */
     protected String description;
 
     /**

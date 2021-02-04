@@ -526,10 +526,9 @@ public class Binary {
      *
      * @param value The value to read the bit from.
      * @param bit   bit position in range 0 (least significant) to 63 (most)
-     * @return 0 if the bit position contains 0, and 1 otherwise.
+     * @return 0 if the bit position contains 0, 1 otherwise.
      */
     public static int bitValue(long value, int bit) {
-
         return (int) (1L & (value >> bit));
     }
 
