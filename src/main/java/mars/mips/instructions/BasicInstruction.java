@@ -30,15 +30,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Class to represent a basic instruction in the MIPS instruction set.
- * Basic instruction means it translates directly to a 32-bit binary machine
- * instruction.
- *
- * @author Pete Sanderson and Ken Vollmar
- * @version August 2003
+ * Basic instruction means it translates directly to a 32-bit binary
+ * machine instruction.
  */
 public class BasicInstruction extends Instruction {
 
-    private String instructionName;
     private BasicInstructionFormat instructionFormat;
     private String operationMask;
     private SimulationCode simulationCode;
@@ -85,8 +81,9 @@ public class BasicInstruction extends Instruction {
         this.opcodeMatch = (int) Long.parseLong(this.operationMask.replaceAll("[^1]", "0"), 2);
     }
 
-    // Temporary constructor so that instructions without description yet will compile.
-
+    /**
+     * Constructor for instructions without a description
+     */
     public BasicInstruction(String example, BasicInstructionFormat instrFormat,
                             String operMask, SimulationCode simCode) {
         this(example, "", instrFormat, operMask, simCode);
