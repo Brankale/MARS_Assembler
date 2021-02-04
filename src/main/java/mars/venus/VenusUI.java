@@ -226,32 +226,31 @@ public class VenusUI extends JFrame {
         messagesPane = new MessagesPane();
     }
 
-    private final String ICONS_PATH = Globals.imagesPath;
-    private final String FILE_NEW_ACTION_PATH = ICONS_PATH + "New22.png";
-    private final String FILE_OPEN_ACTION_PATH = ICONS_PATH + "Open22.png";
-    private final String FILE_SAVE_ACTION_PATH = ICONS_PATH + "Save22.png";
-    private final String FILE_SAVE_AS_ACTION_PATH = ICONS_PATH + "SaveAs22.png";
-    private final String FILE_DUMP_MEMORY_ACTION_PATH = ICONS_PATH + "Dump22.png";
-    private final String FILE_PRINT_ACTION_PATH = ICONS_PATH + "Print22.gif";
-    private final String EDIT_UNDO_ACTION_PATH = ICONS_PATH + "Undo22.png";
-    private final String EDIT_REDO_ACTION_PATH = ICONS_PATH + "Redo22.png";
-    private final String EDIT_CUT_ACTION_PATH = ICONS_PATH + "Cut22.gif";
-    private final String EDIT_COPY_ACTION_PATH = ICONS_PATH + "Copy22.png";
-    private final String EDIT_PASTE_ACTION_PATH = ICONS_PATH + "Paste22.png";
-    private final String EDIT_FIND_REPLACE_ACTION_PATH = ICONS_PATH + "Find22.png";
-    private final String RUN_ASSEMBLE_ACTION_PATH = ICONS_PATH + "Assemble22.png";
-    private final String RUN_GO_ACTION_PATH = ICONS_PATH + "Play22.png";
-    private final String RUN_STEP_ACTION_PATH = ICONS_PATH + "StepForward22.png";
-    private final String RUN_STEP_BACK_ACTION_PATH = ICONS_PATH + "StepBack22.png";
-    private final String RUN_PAUSE_ACTION_PATH = ICONS_PATH + "Pause22.png";
-    private final String RUN_STOP_ACTION_PATH = ICONS_PATH + "Stop22.png";
-    private final String RUN_RESET_ACTION_PATH = ICONS_PATH + "Reset22.png";
-    private final String HELP_HELP_ACTION_PATH = ICONS_PATH + "Help22.png";
+    private final String FILE_NEW_ACTION_ICON = "New22.png";
+    private final String FILE_OPEN_ACTION_ICON = "Open22.png";
+    private final String FILE_SAVE_ACTION_ICON = "Save22.png";
+    private final String FILE_SAVE_AS_ACTION_ICON = "SaveAs22.png";
+    private final String FILE_DUMP_MEMORY_ACTION_ICON = "Dump22.png";
+    private final String FILE_PRINT_ACTION_ICON = "Print22.gif";
+    private final String EDIT_UNDO_ACTION_ICON = "Undo22.png";
+    private final String EDIT_REDO_ACTION_ICON = "Redo22.png";
+    private final String EDIT_CUT_ACTION_ICON = "Cut22.gif";
+    private final String EDIT_COPY_ACTION_ICON = "Copy22.png";
+    private final String EDIT_PASTE_ACTION_ICON = "Paste22.png";
+    private final String EDIT_FIND_REPLACE_ACTION_ICON = "Find22.png";
+    private final String RUN_ASSEMBLE_ACTION_ICON = "Assemble22.png";
+    private final String RUN_GO_ACTION_ICON = "Play22.png";
+    private final String RUN_STEP_ACTION_ICON = "StepForward22.png";
+    private final String RUN_STEP_BACK_ACTION_ICON = "StepBack22.png";
+    private final String RUN_PAUSE_ACTION_ICON = "Pause22.png";
+    private final String RUN_STOP_ACTION_ICON = "Stop22.png";
+    private final String RUN_RESET_ACTION_ICON = "Reset22.png";
+    private final String HELP_HELP_ACTION_ICON = "Help22.png";
 
-    private ImageIcon getActionIcon(String path) {
+    private ImageIcon getActionIcon(String fileName) {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Class cs = this.getClass();
-        return new ImageIcon(tk.getImage(cs.getResource(path)));
+        return new ImageIcon(tk.getImage(cs.getResource(Globals.imagesPath + fileName)));
     }
 
     /**
@@ -262,12 +261,12 @@ public class VenusUI extends JFrame {
     private void createActionObjects() {
         try {
             fileNewAction = new FileNewAction("New",
-                    getActionIcon(FILE_NEW_ACTION_PATH),
+                    getActionIcon(FILE_NEW_ACTION_ICON),
                     "Create a new file for editing", KeyEvent.VK_N,
                     KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             fileOpenAction = new FileOpenAction("Open ...",
-                    getActionIcon(FILE_OPEN_ACTION_PATH),
+                    getActionIcon(FILE_OPEN_ACTION_ICON),
                     "Open a file for editing", KeyEvent.VK_O,
                     KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
@@ -279,56 +278,56 @@ public class VenusUI extends JFrame {
                     "Close all open files", KeyEvent.VK_L,
                     null, mainUI);
             fileSaveAction = new FileSaveAction("Save",
-                    getActionIcon(FILE_SAVE_ACTION_PATH),
+                    getActionIcon(FILE_SAVE_ACTION_ICON),
                     "Save the current file", KeyEvent.VK_S,
                     KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             fileSaveAsAction = new FileSaveAsAction("Save as ...",
-                    getActionIcon(FILE_SAVE_AS_ACTION_PATH),
+                    getActionIcon(FILE_SAVE_AS_ACTION_ICON),
                     "Save current file with different name", KeyEvent.VK_A,
                     null, mainUI);
             fileSaveAllAction = new FileSaveAllAction("Save All", null,
                     "Save all open files", KeyEvent.VK_V,
                     null, mainUI);
             fileDumpMemoryAction = new FileDumpMemoryAction("Dump Memory ...",
-                    getActionIcon(FILE_DUMP_MEMORY_ACTION_PATH),
+                    getActionIcon(FILE_DUMP_MEMORY_ACTION_ICON),
                     "Dump machine code or data in an available format", KeyEvent.VK_D,
                     KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             filePrintAction = new FilePrintAction("Print ...",
-                    getActionIcon(FILE_PRINT_ACTION_PATH),
+                    getActionIcon(FILE_PRINT_ACTION_ICON),
                     "Print current file", KeyEvent.VK_P,
                     null, mainUI);
             fileExitAction = new FileExitAction("Exit", null,
                     "Exit Mars", KeyEvent.VK_X,
                     null, mainUI);
             editUndoAction = new EditUndoAction("Undo",
-                    getActionIcon(EDIT_UNDO_ACTION_PATH),
+                    getActionIcon(EDIT_UNDO_ACTION_ICON),
                     "Undo last edit", KeyEvent.VK_U,
                     KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             editRedoAction = new EditRedoAction("Redo",
-                    getActionIcon(EDIT_REDO_ACTION_PATH),
+                    getActionIcon(EDIT_REDO_ACTION_ICON),
                     "Redo last edit", KeyEvent.VK_R,
                     KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             editCutAction = new EditCutAction("Cut",
-                    getActionIcon(EDIT_CUT_ACTION_PATH),
+                    getActionIcon(EDIT_CUT_ACTION_ICON),
                     "Cut", KeyEvent.VK_C,
                     KeyStroke.getKeyStroke(KeyEvent.VK_X, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             editCopyAction = new EditCopyAction("Copy",
-                    getActionIcon(EDIT_COPY_ACTION_PATH),
+                    getActionIcon(EDIT_COPY_ACTION_ICON),
                     "Copy", KeyEvent.VK_O,
                     KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             editPasteAction = new EditPasteAction("Paste",
-                    getActionIcon(EDIT_PASTE_ACTION_PATH),
+                    getActionIcon(EDIT_PASTE_ACTION_ICON),
                     "Paste", KeyEvent.VK_P,
                     KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             editFindReplaceAction = new EditFindReplaceAction("Find/Replace",
-                    getActionIcon(EDIT_FIND_REPLACE_ACTION_PATH),
+                    getActionIcon(EDIT_FIND_REPLACE_ACTION_ICON),
                     "Find/Replace", KeyEvent.VK_F,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
@@ -338,37 +337,37 @@ public class VenusUI extends JFrame {
                     KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
                     mainUI);
             runAssembleAction = new RunAssembleAction("Assemble",
-                    getActionIcon(RUN_ASSEMBLE_ACTION_PATH),
+                    getActionIcon(RUN_ASSEMBLE_ACTION_ICON),
                     "Assemble the current file and clear breakpoints", KeyEvent.VK_A,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0),
                     mainUI);
             runGoAction = new RunGoAction("Go",
-                    getActionIcon(RUN_GO_ACTION_PATH),
+                    getActionIcon(RUN_GO_ACTION_ICON),
                     "Run the current program", KeyEvent.VK_G,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0),
                     mainUI);
             runStepAction = new RunStepAction("Step",
-                    getActionIcon(RUN_STEP_ACTION_PATH),
+                    getActionIcon(RUN_STEP_ACTION_ICON),
                     "Run one step at a time", KeyEvent.VK_T,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0),
                     mainUI);
             runBackstepAction = new RunBackstepAction("Backstep",
-                    getActionIcon(RUN_STEP_BACK_ACTION_PATH),
+                    getActionIcon(RUN_STEP_BACK_ACTION_ICON),
                     "Undo the last step", KeyEvent.VK_B,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0),
                     mainUI);
             runPauseAction = new RunPauseAction("Pause",
-                    getActionIcon(RUN_PAUSE_ACTION_PATH),
+                    getActionIcon(RUN_PAUSE_ACTION_ICON),
                     "Pause the currently running program", KeyEvent.VK_P,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0),
                     mainUI);
             runStopAction = new RunStopAction("Stop",
-                    getActionIcon(RUN_STOP_ACTION_PATH),
+                    getActionIcon(RUN_STOP_ACTION_ICON),
                     "Stop the currently running program", KeyEvent.VK_S,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0),
                     mainUI);
             runResetAction = new RunResetAction("Reset",
-                    getActionIcon(RUN_RESET_ACTION_PATH),
+                    getActionIcon(RUN_RESET_ACTION_ICON),
                     "Reset MIPS memory and registers", KeyEvent.VK_R,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0),
                     mainUI);
@@ -466,7 +465,7 @@ public class VenusUI extends JFrame {
                     null, null,
                     mainUI);
             helpHelpAction = new HelpHelpAction("Help",
-                    getActionIcon(HELP_HELP_ACTION_PATH),
+                    getActionIcon(HELP_HELP_ACTION_ICON),
                     "Help", KeyEvent.VK_H,
                     KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
                     mainUI);
