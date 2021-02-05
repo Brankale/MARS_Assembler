@@ -189,9 +189,6 @@ public class ProgramArgumentList {
             RegisterFile.getUserRegister("$sp").setValue(stackAddress + Memory.WORD_LENGTH_BYTES);
             RegisterFile.getUserRegister("$a0").setValue(argStartAddress.length); // argc
             RegisterFile.getUserRegister("$a1").setValue(stackAddress + Memory.WORD_LENGTH_BYTES + Memory.WORD_LENGTH_BYTES); // argv
-            //RegisterFile.updateRegister("$sp",stackAddress+Memory.WORD_LENGTH_BYTES);
-            //RegisterFile.updateRegister("$a0",argStartAddress.length); // argc
-            //RegisterFile.updateRegister("$a1",stackAddress+Memory.WORD_LENGTH_BYTES+Memory.WORD_LENGTH_BYTES); // argv
         } catch (AddressErrorException aee) {
             System.out.println("Internal Error: Memory write error occurred while storing program arguments! " + aee);
             System.exit(0);

@@ -167,16 +167,7 @@ public class MemoryConfigurations {
             configurations.add(new MemoryConfiguration("CompactTextAtZero", "Compact, Text at Address 0", configurationItemNames, textBasedCompactConfigurationItemValues));
             defaultConfiguration = configurations.get(0);
             currentConfiguration = defaultConfiguration;
-            // Get current config from settings
-            //String currentConfigurationIdentifier = Globals.getSettings().getMemoryConfiguration();
             setCurrentConfiguration(getConfigurationByName(Globals.getSettings().getMemoryConfiguration()));
-            //	Iterator configurationsIterator = getConfigurationsIterator();
-            //	while (configurationsIterator.hasNext()) {
-            //  MemoryConfiguration config = (MemoryConfiguration)configurationsIterator.next();
-            //	  if (currentConfigurationIdentifier.equals(config.getConfigurationIdentifier())) {
-            //	     setCurrentConfiguration(config);
-            //			}
-            //	   }
         }
     }
 

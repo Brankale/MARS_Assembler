@@ -68,18 +68,6 @@ public class SyscallRead extends AbstractSyscall {
                 RegisterFile.getValue(6)); // length
         RegisterFile.updateRegister(2, retLength); // set returned value in register
 
-        // Getting rid of processing exception.  It is the responsibility of the
-        // user program to check the syscall's return value.  MARS should not
-        // re-emptively terminate MIPS execution because of it.  Thanks to
-        // UCLA student Duy Truong for pointing this out.  DPS 28-July-2009
-         /*
-         if (retLength < 0) // some error in opening file
-         {
-            throw new ProcessingException(statement,
-                                    SystemIO.getFileErrorMessage()+" (syscall 14)",
-                                    Exceptions.SYSCALL_EXCEPTION);
-         }
-			*/
         // copy bytes from returned buffer into MARS memory
         try {
             while (index < retLength) {

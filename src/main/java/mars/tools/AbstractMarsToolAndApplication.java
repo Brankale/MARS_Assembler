@@ -704,9 +704,6 @@ public abstract class AbstractMarsToolAndApplication extends JFrame implements M
     // called when the Assemble and Run button is pressed.  Used only by stand-alone app.
     private class CreateAssembleRunMIPSprogram implements Runnable {
         public void run() {
-            String noSupportForExceptionHandler = null;  // no auto-loaded exception handlers.
-            // boolean extendedAssemblerEnabled = true;     // In this context, no reason to constrain.
-            // boolean warningsAreErrors = false;           // Ditto.
 
             String exceptionHandler = null;
             if (Globals.getSettings().getBooleanSetting(Settings.EXCEPTION_HANDLER_ENABLED) &&
@@ -720,7 +717,7 @@ public abstract class AbstractMarsToolAndApplication extends JFrame implements M
             MipsProgram program = new MipsProgram();
             mars.Globals.program = program; // Shouldn't have to do this...
             String fileToAssemble = mostRecentlyOpenedFile.getPath();
-            ArrayList<String> filesToAssemble = null;
+            ArrayList<String> filesToAssemble;
             if (multiFileAssemble) {// setting (check box in file open dialog) calls for multiple file assembly 
                 filesToAssemble = FilenameFinder.getFilenameList(
                         new File(fileToAssemble).getParent(), Globals.fileExtensions);
@@ -728,7 +725,7 @@ public abstract class AbstractMarsToolAndApplication extends JFrame implements M
                 filesToAssemble = new ArrayList<>();
                 filesToAssemble.add(fileToAssemble);
             }
-            ArrayList<MipsProgram> programsToAssemble = null;
+            ArrayList<MipsProgram> programsToAssemble;
             try {
                 operationStatusMessages.displayNonTerminatingMessage("Assembling " + fileToAssemble);
                 programsToAssemble = program.prepareFilesForAssembly(filesToAssemble, fileToAssemble, exceptionHandler);

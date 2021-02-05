@@ -938,47 +938,9 @@ public class FloatRepresentation extends AbstractMarsToolAndApplication {
             // for every 4 characters (bits) of the display.  This would make
             // the correspondence between bits and hex digits very clear.
             // NOTE: this is the only reason for subclassing JTextField.
-         	
-         	/*
-            int columnWidth = getWidth()/getColumns();
-            Color shadedColor = Color.red;
-            Polygon p;
-            // loop will handle the lower order 5 "nibbles" (hex digits)
-            for (int i=3; i<20; i+=8) {
-               p = new Polygon();
-               p.addPoint(getX()+columnWidth*i, getY());
-               p.addPoint(getX()+columnWidth*i, getY()+getHeight());
-               p.addPoint(getX()+columnWidth*(i+4), getY()+getHeight());
-               p.addPoint(getX()+columnWidth*(i+4), getY());
-         //			System.out.println("Polygon vertices are:"+
-         //			" ("+(getX()+columnWidth*i)    +","+getY()              +") "+
-         //			" ("+(getX()+columnWidth*i)    +","+(getY()+getHeight())+") "+
-         //			" ("+(getX()+columnWidth*(i+4))+","+(getY()+getHeight())+") "+
-         //			" ("+(getX()+columnWidth*(i+4))+","+getY()              +") "
-         //			); 
-               g.setColor(shadedColor);
-               g.fillPolygon(p);
-            }*/
-         	/*
-            // Nibble 5 straddles binary display of exponent and fraction.
-            p = new Polygon();
-            p.addPoint(hexDisplay.getX()+hexColumnWidth*(hexDisplay.getColumns()-6)+hexColumnWidth/2, upperY);
-            p.addPoint(binaryFractionDisplay.getX()+binaryColumnWidth*(binaryFractionDisplay.getColumns()-20), lowerY);
-            p.addPoint(binaryExponentDisplay.getX()+binaryColumnWidth*(binaryExponentDisplay.getColumns()-1), lowerY);
-            g.fillPolygon(p);
-         	// Nibble 6 maps to binary display of exponent.
-            p = new Polygon();
-            p.addPoint(hexDisplay.getX()+hexColumnWidth*(hexDisplay.getColumns()-7)+hexColumnWidth/2, upperY);
-            p.addPoint(binaryExponentDisplay.getX()+binaryColumnWidth*(binaryExponentDisplay.getColumns()-1), lowerY);
-            p.addPoint(binaryExponentDisplay.getX()+binaryColumnWidth*(binaryExponentDisplay.getColumns()-5), lowerY);
-            g.fillPolygon(p);
-         	// Nibble 7 straddles binary display of sign and exponent.
-            p = new Polygon();
-            p.addPoint(hexDisplay.getX()+hexColumnWidth*(hexDisplay.getColumns()-8)+hexColumnWidth/2, upperY);
-            p.addPoint(binaryExponentDisplay.getX()+binaryColumnWidth*(binaryExponentDisplay.getColumns()-5), lowerY);
-            p.addPoint(binarySignDisplay.getX(), lowerY);
-            g.fillPolygon(p);
-         	*/
+
+            // TODO: the commented code has been removed.
+            //       Check if this class is useless.
         }
     }
 

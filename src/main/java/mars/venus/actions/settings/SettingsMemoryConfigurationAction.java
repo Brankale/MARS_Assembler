@@ -141,9 +141,6 @@ public class SettingsMemoryConfigurationAction extends GuiAction {
             JPanel valuesPanel = new JPanel(new GridLayout(numItems, 1));
             Font monospaced = new Font("Monospaced", Font.PLAIN, 12);
             nameDisplay = new JLabel[numItems];
-            //   for (int i=numItems-1; i >= 0; i--) {
-            //      namesPanel.add(new JLabel(configurationItemNames[i]));
-            //   }
             addressDisplay = new JTextField[numItems];
             for (int i = 0; i < numItems; i++) {
                 nameDisplay[i] = new JLabel();

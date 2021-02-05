@@ -986,17 +986,6 @@ public class TextSegmentWindow extends JInternalFrame implements Observer {
         protected JTableHeader createDefaultTableHeader() {
             tableHeader = new TextTableHeader(columnModel);
             return tableHeader;
-            /*
-                new JTableHeader(columnModel) {
-                   public String getToolTipText(MouseEvent e) {
-                     String tip = null;
-                     java.awt.Point p = e.getPoint();
-                     int index = columnModel.getColumnIndexAtX(p.x);
-                     int realIndex = columnModel.getColumn(index).getModelIndex();
-                     return columnToolTips[realIndex];
-                  }
-               };
-              */
         }
 
         // Given the model index of a column header, will return rectangle

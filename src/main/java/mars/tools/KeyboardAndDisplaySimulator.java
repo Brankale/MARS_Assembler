@@ -421,15 +421,6 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
         String stringCaretPosition = "";
         // display position as stream or 2D depending on random access 
         if (displayRandomAccessMode) {
-            //             if ( caretPosition == rows*(columns+1)+1) {
-            //                stringCaretPosition = "(0,0)";
-            //             } 
-            //             else if ( (caretPosition+1) % (columns+1) == 0) { 
-            //                stringCaretPosition = "(0,"+((caretPosition/(columns+1))+1)+")";
-            //             } 
-            //             else {
-            //                stringCaretPosition = "("+(caretPosition%(columns+1))+","+(caretPosition/(columns+1))+")";
-            //             }
             if (((caretPosition + 1) % (columns + 1) != 0)) {
                 stringCaretPosition = "(" + (caretPosition % (columns + 1)) + "," + (caretPosition / (columns + 1)) + ")";
             } else if (((caretPosition + 1) % (columns + 1) == 0) && ((caretPosition / (columns + 1)) + 1 == rows)) {
@@ -590,15 +581,6 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
                         d.getContentPane().add(p, BorderLayout.SOUTH);
                         d.setLocationRelativeTo(theWindow);
                         d.setVisible(true);
-                        // This alternative technique is simpler than the above but requires java 1.6!  DPS 16-July-2014
-                        //       JOptionPane theStuff = new JOptionPane(new JScrollPane(ja),JOptionPane.INFORMATION_MESSAGE,
-                        //            JOptionPane.DEFAULT_OPTION, null, new String[]{"Close"} );
-                        //       JDialog theDialog = theStuff.createDialog(theWindow, "Simulating the Keyboard and Display");
-                        //       theDialog.setModal(false);
-                        //       theDialog.setVisible(true);
-                        // The original code. Cannot be made modeless.
-                        //       JOptionPane.showMessageDialog(theWindow, new JScrollPane(ja),
-                        //           "Simulating the Keyboard and Display", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
         return help;

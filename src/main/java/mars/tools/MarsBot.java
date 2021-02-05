@@ -169,15 +169,6 @@ public class MarsBot implements Observer, MarsTool {
 
             // Recover Graphics2D
             Graphics2D g2 = (Graphics2D) g;
-            
-            /*
-            if (clearTheDisplay)
-            {
-                g2.setColor(Color.lightGray);
-                g2.fillRect(0, 0, width - 1, height - 1); // Clear all previous drawn information
-                clearTheDisplay = false;
-            }
-            */
 
             // Draw the track left behind, for each segment of the path
             g2.setColor(Color.blue);
@@ -194,16 +185,6 @@ public class MarsBot implements Observer, MarsTool {
 
             g2.setColor(Color.black);
             g2.fillRect((int) MarsBotXPosition, (int) MarsBotYPosition, 20, 20); // Draw bot at its current position
-         
-            /*
-             g2.setColor(Color.blue);
-             g2.setFont(new Font(g2.getFont().getName(), g2.getFont().getStyle(), 20) );  // same font and style in larger size
-             g2.drawOval( width/2 - 30,  // TBD Hardcoded oval size
-             height/2 - 30,
-             60,
-             60);
-             g2.drawString(" " + n, width/2, height/2);
-             */
 
 
         }
@@ -277,9 +258,6 @@ public class MarsBot implements Observer, MarsTool {
                         trackIndex++;  // the index of the next start point
                     }
 
-                    //System.out.println("MarsBotDisplay.paintComponent: putting point in track array at " + trackIndex);
-
-                    //System.out.println(message + notice.getValue() );
                 } else if (address == ADDR_MOVE) {
                     message = "MarsBot.update: got move control value: ";
                     if (notice.getValue() == 0) MarsBotMoving = false;
@@ -292,8 +270,6 @@ public class MarsBot implements Observer, MarsTool {
                     // manner, but the writes are already known to this tool.
                     // NO ACTION
                 } else {
-                    //message = "MarsBot.update: HEY!!! unknown address of " + Integer.toString(address) + ", value: ";
-                    //System.out.println(message + notice.getValue() );
                 }
 
             }

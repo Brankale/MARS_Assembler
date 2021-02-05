@@ -34,8 +34,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
-//import mars.tools.bhtsim.BHTSimGUI;
-//import mars.tools.bhtsim.BHTableModel;
 
 
 /**

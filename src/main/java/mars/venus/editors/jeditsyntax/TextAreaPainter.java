@@ -335,27 +335,12 @@ public class TextAreaPainter extends JComponent implements TabExpander {
      * @param evt The mouse event
      */
     public String getToolTipText(MouseEvent evt) {
-        //          if(highlights != null)
-        //             return highlights.getToolTipText(evt);
-        //          else
-        //             return null;
         if (highlights != null)
             return highlights.getToolTipText(evt);
         else if (this.textArea.getTokenMarker() == null)
             return null;
         else
             return this.textArea.getSyntaxSensitiveToolTipText(evt.getX(), evt.getY());
-        //           int line = yToLine(evt.getY());
-        //  int offset = xToOffset(line,evt.getX());
-        //          {
-        //             if (evt instanceof InstructionMouseEvent) {
-        //                System.out.println("get Tool Tip Text for InstructionMouseEvent");
-        //                return "Instruction: "+ ((InstructionMouseEvent)evt).getLine().toString();
-        //             } 
-        //             else {
-        //                return "Not a fake?";//null;
-        //             }
-        //          }
     }
 
     /**
@@ -571,14 +556,6 @@ public class TextAreaPainter extends JComponent implements TabExpander {
         y += fm.getHeight();
         x = SyntaxUtilities.paintSyntaxLine(currentLine,
                 currentLineTokens, styles, this, gfx, x, y);
-        //          count++;
-        //          if (count % 100 == 10) {
-        //             textArea.setToolTipText("Setting Text at Count of "+count); System.out.println("set tool tip");
-        //          }
-        //          if (count % 100 == 60) {
-        //             textArea.setToolTipText(null);System.out.println("reset tool tip");
-        //          }
-        //System.out.println("SyntaxUtilities.paintSyntaxLine "+ (++count));
         if (eolMarkers) {
             gfx.setColor(eolMarkerColor);
             gfx.drawString(".", x, y);

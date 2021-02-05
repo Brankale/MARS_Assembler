@@ -260,10 +260,6 @@ public class CacheSimulator extends AbstractMarsToolAndApplication {
         JPanel replacementPolicyRow = getPanelWithBorderLayout();
         replacementPolicyRow.setBorder(emptyBorder);
         replacementPolicyRow.add(new JLabel("Block Replacement Policy "), BorderLayout.WEST);
-      /*       replacementPolicyDisplay = new JTextField("N/A",6);
-         replacementPolicyDisplay.setEditable(false);
-         replacementPolicyDisplay.setBackground(backgroundColor);
-         replacementPolicyDisplay.setHorizontalAlignment(JTextField.RIGHT); */
         replacementPolicyRow.add(cacheReplacementSelector, BorderLayout.EAST);
 
         JPanel cacheSetSizeRow = getPanelWithBorderLayout();
@@ -271,17 +267,6 @@ public class CacheSimulator extends AbstractMarsToolAndApplication {
         cacheSetSizeRow.add(new JLabel("Set size (blocks) "), BorderLayout.WEST);
         cacheSetSizeRow.add(cacheSetSizeSelector, BorderLayout.EAST);
 
-        // Cacheable address range "selection" removed for now...
-      /*
-         JPanel cacheableAddressesRow = getPanelWithBorderLayout();
-         cacheableAddressesRow.setBorder(emptyBorder);
-         cacheableAddressesRow.add(new JLabel("Cacheable Addresses "),BorderLayout.WEST);
-         cacheableAddressesDisplay = new JTextField("all data segment");
-         cacheableAddressesDisplay.setEditable(false);
-         cacheableAddressesDisplay.setBackground(backgroundColor);
-         cacheableAddressesDisplay.setHorizontalAlignment(JTextField.RIGHT);
-         cacheableAddressesRow.add(cacheableAddressesDisplay, BorderLayout.EAST);
-      */
         JPanel cacheNumberBlocksRow = getPanelWithBorderLayout();
         cacheNumberBlocksRow.setBorder(emptyBorder);
         cacheNumberBlocksRow.add(new JLabel("Number of blocks "), BorderLayout.WEST);

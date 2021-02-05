@@ -289,21 +289,6 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
     void highlightCellForRegister(Register register) {
         this.highlightRow = register.getNumber();
         table.tableChanged(new TableModelEvent(table.getModel()));
-      	/*
-         int registerColumn = FLOAT_COLUMN;
-         registerColumn = table.convertColumnIndexToView(registerColumn); 
-         Rectangle registerCell = table.getCellRect(registerRow, registerColumn, true);
-         // STEP 2:  Select the cell by generating a fake Mouse Pressed event and 
-      	// explicitly invoking the table's mouse listener.
-         MouseEvent fakeMouseEvent = new MouseEvent(table, MouseEvent.MOUSE_PRESSED,
-                                                    new Date().getTime(), MouseEvent.BUTTON1_MASK,
-            													 (int)registerCell.getX()+1,
-            													 (int)registerCell.getY()+1, 1, false);
-         MouseListener[] mouseListeners = table.getMouseListeners();
-         for (int i=0; i<mouseListeners.length; i++) {
-            mouseListeners[i].mousePressed(fakeMouseEvent);
-         }
-      	*/
     }
 
     /*

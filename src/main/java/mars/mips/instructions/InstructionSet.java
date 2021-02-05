@@ -1309,12 +1309,6 @@ public class InstructionSet {
                                 float add1 = Float.intBitsToFloat(Coprocessor1.getValue(operands[1]));
                                 float add2 = Float.intBitsToFloat(Coprocessor1.getValue(operands[2]));
                                 float sum = add1 + add2;
-                                // overflow detected when sum is positive or negative infinity.
-                  /*
-                  if (sum == Float.NEGATIVE_INFINITY || sum == Float.POSITIVE_INFINITY) {
-                    throw new ProcessingException(statement,"arithmetic overflow");
-                  }
-                  */
                                 Coprocessor1.updateRegister(operands[0], Float.floatToIntBits(sum));
                             }
                         }));

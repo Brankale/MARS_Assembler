@@ -475,20 +475,6 @@ public class Assembler {
                 errors.add(new ErrorMessage(fileCurrentlyBeingAssembled, tokens.get(0)
                         .getSourceLine(), 0, "Detected a macro expansion loop (recursive reference). "));
             } else {
-                //                for (int i = macro.getFromLine() + 1; i < macro.getToLine(); i++) {
-                //                   String substituted = macro.getSubstitutedLine(i, tokens, counter, errors);
-                //                   TokenList tokenList2 = fileCurrentlyBeingAssembled.getTokenizer().tokenizeLine(
-                //                      i, substituted, errors);
-                //                   // If token list getProcessedLine() is not empty, then .eqv was performed and it contains the modified source.
-                //                	// Put it into the line to be parsed, so it will be displayed properly in text segment display. DPS 23 Jan 2013
-                //                   if (tokenList2.getProcessedLine().length() > 0)
-                //                      substituted = tokenList2.getProcessedLine();
-                //                   // recursively parse lines of expanded macro
-                //                   ArrayList<ProgramStatement> statements = parseLine(tokenList2, "<" + (i-macro.getFromLine()+macro.getOriginalFromLine()) + "> "
-                //                      + substituted.trim(), sourceLineNumber, extendedAssemblerEnabled);
-                //                   if (statements != null)
-                //                      ret.addAll(statements);
-                //                }
                 for (int i = macro.getFromLine() + 1; i < macro.getToLine(); i++) {
 
                     String substituted = macro.getSubstitutedLine(i, tokens, counter, errors);
