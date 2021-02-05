@@ -330,61 +330,61 @@ public class MarsLaunch {
                     // Let it fall thru and get handled by catch-all
                 }
             }
-            if (args[i].toLowerCase().equals("d")) {
+            if (args[i].equalsIgnoreCase("d")) {
                 Globals.debug = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("a")) {
+            if (args[i].equalsIgnoreCase("a")) {
                 simulate = false;
                 continue;
             }
-            if (args[i].toLowerCase().equals("ad") ||
-                    args[i].toLowerCase().equals("da")) {
+            if (args[i].equalsIgnoreCase("ad") ||
+                    args[i].equalsIgnoreCase("da")) {
                 Globals.debug = true;
                 simulate = false;
                 continue;
             }
-            if (args[i].toLowerCase().equals("p")) {
+            if (args[i].equalsIgnoreCase("p")) {
                 assembleProject = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("dec")) {
+            if (args[i].equalsIgnoreCase("dec")) {
                 displayFormat = DECIMAL;
                 continue;
             }
-            if (args[i].toLowerCase().equals("hex")) {
+            if (args[i].equalsIgnoreCase("hex")) {
                 displayFormat = HEXADECIMAL;
                 continue;
             }
-            if (args[i].toLowerCase().equals("ascii")) {
+            if (args[i].equalsIgnoreCase("ascii")) {
                 displayFormat = ASCII;
                 continue;
             }
-            if (args[i].toLowerCase().equals("b")) {
+            if (args[i].equalsIgnoreCase("b")) {
                 verbose = false;
                 continue;
             }
-            if (args[i].toLowerCase().equals("db")) {
+            if (args[i].equalsIgnoreCase("db")) {
                 delayedBranching = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("np") || args[i].toLowerCase().equals("ne")) {
+            if (args[i].equalsIgnoreCase("np") || args[i].equalsIgnoreCase("ne")) {
                 pseudo = false;
                 continue;
             }
-            if (args[i].toLowerCase().equals("we")) {
+            if (args[i].equalsIgnoreCase("we")) {
                 warningsAreErrors = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("sm")) {
+            if (args[i].equalsIgnoreCase("sm")) {
                 startAtMain = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("smc")) {
+            if (args[i].equalsIgnoreCase("smc")) {
                 selfModifyingCode = true;
                 continue;
             }
-            if (args[i].toLowerCase().equals("ic")) {
+            if (args[i].equalsIgnoreCase("ic")) {
                 countInstructions = true;
                 continue;
             }
@@ -730,7 +730,6 @@ public class MarsLaunch {
      * @param noCopyrightSwitch
      */
     private void displayCopyright(String[] args, String noCopyrightSwitch) {
-        boolean print = true;
         for (String arg : args) {
             if (arg.toLowerCase().equals(noCopyrightSwitch)) {
                 return;
