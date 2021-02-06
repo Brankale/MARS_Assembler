@@ -8,8 +8,12 @@ There's no download link yet, you must compile the project by yourself.
 You can download the original version at the [official website][6].
 
 ## Purpose of this repository
-This repo has the goal of refactoring the code to meet the requirements of Java 8.
-I don't think I'll accept any pull request. This is something I did just for fun.
+This repo has the goal of refactoring the code to meet the requirements of Java 8, and
+adding or revamping existing features.
+
+I did this project just for fun so don't expect I'll work full time on this project.
+
+I'm open to pull request if anyone wants to contribute.
 
 ## Features included in this custom version
 - OS look & feel (not Java look & feel)
@@ -21,7 +25,7 @@ I don't think I'll accept any pull request. This is something I did just for fun
 
 ## How to run / compile MARS
 - In order to **run** MARS v4.XX, you must **install [JRE 1.8][9] (Java 8)**
-- In order to **compile** MARS v4.XX, you must **install Java SE 8 (or later) SDK** and **Maven**
+- In order to **compile** MARS v4.XX, you must **install Java SE 8 (or later) SDK**
  
  Note: This project currently makes use of the [Intellij IDEA IDE][10]
 
