@@ -1,8 +1,9 @@
-package mars.tools;
+package mars.tools.keyboard_display_simulator;
 
 import mars.Globals;
 import mars.mips.hardware.*;
 import mars.simulator.Exceptions;
+import mars.tools.AbstractMarsToolAndApplication;
 import mars.util.Binary;
 import mars.venus.AbstractFontSettingDialog;
 
@@ -469,7 +470,7 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
                 "Keyboard And Display MMIO Simulator\n\n" +
                         "Use this program to simulate Memory-Mapped I/O (MMIO) for a keyboard input device and character " +
                         "display output device.  It may be run either from MARS' Tools menu or as a stand-alone application. " +
-                        "For the latter, simply write a driver to instantiate a mars.tools.KeyboardAndDisplaySimulator object " +
+                        "For the latter, simply write a driver to instantiate a mars.tools.keyboard_display_simulator.KeyboardAndDisplaySimulator object " +
                         "and invoke its go() method.\n" +
                         "\n" +
                         "While the tool is connected to MIPS, each keystroke in the text area causes the corresponding ASCII " +

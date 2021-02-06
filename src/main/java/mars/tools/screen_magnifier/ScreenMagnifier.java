@@ -1,4 +1,6 @@
-package mars.tools;
+package mars.tools.screen_magnifier;
+
+import mars.tools.MarsTool;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

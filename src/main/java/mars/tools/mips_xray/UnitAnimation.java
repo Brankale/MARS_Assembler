@@ -1,4 +1,4 @@
-package mars.tools;
+package mars.tools.mips_xray;
 
 import mars.Globals;
 import org.w3c.dom.Document;

@@ -1,10 +1,11 @@
-package mars.tools;
+package mars.tools.digital_lab_sim;
 
 import mars.Globals;
 import mars.mips.hardware.AddressErrorException;
 import mars.mips.hardware.Coprocessor0;
 import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.tools.AbstractMarsToolAndApplication;
 
 import javax.swing.*;
 import java.awt.*;

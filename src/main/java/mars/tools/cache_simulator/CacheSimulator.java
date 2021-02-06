@@ -1,8 +1,9 @@
-package mars.tools;
+package mars.tools.cache_simulator;
 
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.tools.AbstractMarsToolAndApplication;
 import mars.util.Binary;
 
 import javax.swing.*;

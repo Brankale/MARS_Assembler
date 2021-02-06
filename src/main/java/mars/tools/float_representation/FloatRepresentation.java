@@ -1,9 +1,10 @@
-package mars.tools;
+package mars.tools.float_representation;
 
 import mars.Globals;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.Coprocessor1;
 import mars.mips.hardware.Register;
+import mars.tools.AbstractMarsToolAndApplication;
 import mars.util.Binary;
 
 import javax.swing.*;

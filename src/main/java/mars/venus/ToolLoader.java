@@ -1,11 +1,25 @@
 package mars.venus;
 
-import mars.tools.*;
+import mars.tools.MarsTool;
+import mars.tools.bht_simulator.BHTSimulator;
+import mars.tools.bitmap_display.BitmapDisplay;
+import mars.tools.cache_simulator.CacheSimulator;
+import mars.tools.digital_lab_sim.DigitalLabSim;
+import mars.tools.float_representation.FloatRepresentation;
+import mars.tools.instruction_counter.InstructionCounter;
+import mars.tools.instruction_statistics.InstructionStatistics;
+import mars.tools.intro_to_tools.IntroToTools;
+import mars.tools.keyboard_display_simulator.KeyboardAndDisplaySimulator;
+import mars.tools.mars_bot.MarsBot;
+import mars.tools.memory_visualization.MemoryReferenceVisualization;
+import mars.tools.mips_xray.MipsXray;
+import mars.tools.scavenger_hunt.ScavengerHunt;
+import mars.tools.screen_magnifier.ScreenMagnifier;
 import mars.venus.actions.ToolAction;
 
 import javax.swing.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 	
 /*
 Copyright (c) 2003-2006,  Pete Sanderson and Kenneth Vollmar

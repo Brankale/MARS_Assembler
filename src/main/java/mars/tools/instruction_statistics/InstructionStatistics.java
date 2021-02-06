@@ -25,13 +25,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (MIT license, http://www.opensource.org/licenses/mit-license.html)
  */
-package mars.tools;
+package mars.tools.instruction_statistics;
 
 import mars.ProgramStatement;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.AddressErrorException;
 import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.tools.AbstractMarsToolAndApplication;
 
 import javax.swing.*;
 import java.awt.*;

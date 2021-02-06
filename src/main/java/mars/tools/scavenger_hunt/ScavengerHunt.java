@@ -1,9 +1,10 @@
-package mars.tools;
+package mars.tools.scavenger_hunt;
 
 import mars.Globals;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.AddressErrorException;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.tools.MarsTool;
 import mars.util.Binary;
 
 import javax.swing.*;

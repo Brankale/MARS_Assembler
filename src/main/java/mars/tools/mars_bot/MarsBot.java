@@ -1,9 +1,10 @@
-package mars.tools;
+package mars.tools.mars_bot;
 
 import mars.Globals;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.AddressErrorException;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.tools.MarsTool;
 
 import javax.swing.*;
 import java.awt.*;

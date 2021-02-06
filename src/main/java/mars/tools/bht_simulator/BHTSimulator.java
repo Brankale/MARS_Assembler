@@ -25,10 +25,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (MIT license, http://www.opensource.org/licenses/mit-license.html)
  */
 
-package mars.tools;
+package mars.tools.bht_simulator;
 
 import mars.ProgramStatement;
 import mars.mips.hardware.*;
+import mars.tools.AbstractMarsToolAndApplication;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package mars.tools;
+package mars.tools.mips_xray;
 
 import mars.Globals;
 import mars.ProgramStatement;
@@ -8,6 +8,7 @@ import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
 import mars.mips.instructions.BasicInstruction;
 import mars.mips.instructions.BasicInstructionFormat;
+import mars.tools.AbstractMarsToolAndApplication;
 import mars.venus.actions.run.RunAssembleAction;
 import mars.venus.actions.run.RunBackstepAction;
 import mars.venus.actions.run.RunStepAction;

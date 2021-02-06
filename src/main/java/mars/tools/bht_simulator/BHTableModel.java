@@ -25,7 +25,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (MIT license, http://www.opensource.org/licenses/mit-license.html)
  */
 
-package mars.tools;//.bhtsim;
+package mars.tools.bht_simulator;//.bhtsim;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Vector;

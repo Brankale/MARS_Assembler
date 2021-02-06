@@ -1,4 +1,4 @@
-package mars.tools;
+package mars.tools.mips_xray;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

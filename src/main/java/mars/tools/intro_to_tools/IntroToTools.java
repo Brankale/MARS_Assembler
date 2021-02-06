@@ -1,4 +1,6 @@
-package mars.tools;
+package mars.tools.intro_to_tools;
+
+import mars.tools.AbstractMarsToolAndApplication;
 
 import javax.swing.*;
 import java.awt.*;
