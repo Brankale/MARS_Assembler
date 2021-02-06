@@ -120,44 +120,49 @@ public class MarsLaunch {
      * made available to the MIPS program at runtime.<br>
      */
     public MarsLaunch(String[] args) {
-        boolean gui = (args.length == 0);
-        Globals.initialize(gui);
+        boolean gui = args.length == 0;
+        
+        Globals.initialize(gui);        
         if (gui) {
             launchIDE();
-        } else { // running from command line.
-            // assure command mode works in headless environment (generates exception if not)
-            System.setProperty("java.awt.headless", "true");
-            simulate = true;
-            displayFormat = HEXADECIMAL;
-            verbose = true;
-            assembleProject = false;
-            pseudo = true;
-            delayedBranching = false;
-            warningsAreErrors = false;
-            startAtMain = false;
-            countInstructions = false;
-            selfModifyingCode = false;
-            instructionCount = 0;
-            assembleErrorExitCode = 0;
-            simulateErrorExitCode = 0;
-            registerDisplayList = new ArrayList<>();
-            memoryDisplayList = new ArrayList<>();
-            filenameList = new ArrayList<>();
-            MemoryConfigurations.setCurrentConfiguration(MemoryConfigurations.getDefaultConfiguration());
-            // do NOT use Globals.program for command line MARS -- it triggers 'backstep' log.
-            code = new MipsProgram();
-            maxSteps = -1;
-            out = System.out;
-            if (parseCommandArgs(args)) {
-                if (runCommand()) {
-                    displayMiscellaneousPostMortem();
-                    displayRegistersPostMortem();
-                    displayMemoryPostMortem();
-                }
-                dumpSegments();
-            }
-            System.exit(Globals.exitCode);
+        } else {
+            runFromCommandLine(args);
         }
+    }
+
+    private void runFromCommandLine(String[] args) {
+        // assure command mode works in headless environment (generates exception if not)
+        System.setProperty("java.awt.headless", "true");
+        simulate = true;
+        displayFormat = HEXADECIMAL;
+        verbose = true;
+        assembleProject = false;
+        pseudo = true;
+        delayedBranching = false;
+        warningsAreErrors = false;
+        startAtMain = false;
+        countInstructions = false;
+        selfModifyingCode = false;
+        instructionCount = 0;
+        assembleErrorExitCode = 0;
+        simulateErrorExitCode = 0;
+        registerDisplayList = new ArrayList<>();
+        memoryDisplayList = new ArrayList<>();
+        filenameList = new ArrayList<>();
+        MemoryConfigurations.setCurrentConfiguration(MemoryConfigurations.getDefaultConfiguration());
+        // do NOT use Globals.program for command line MARS -- it triggers 'backstep' log.
+        code = new MipsProgram();
+        maxSteps = -1;
+        out = System.out;
+        if (parseCommandArgs(args)) {
+            if (runCommand()) {
+                displayMiscellaneousPostMortem();
+                displayRegistersPostMortem();
+                displayMemoryPostMortem();
+            }
+            dumpSegments();
+        }
+        System.exit(Globals.exitCode);
     }
 
     /**
@@ -171,7 +176,7 @@ public class MarsLaunch {
         for (String[] triple : dumpTriples) {
             File file = new File(triple[2]);
             Integer[] segInfo = MemoryDump.getSegmentBounds(triple[0]);
-            // If not segment name, see if it is address range instead.  DPS 14-July-2008
+            // If not segment name, see if it is address range instead.
             if (segInfo == null) {
                 try {
                     String[] memoryRange = checkMemoryAddressRange(triple[0]);
@@ -232,7 +237,6 @@ public class MarsLaunch {
         SwingUtilities.invokeLater(
                 new Runnable() {
                     public void run() {
-                        // Turn off metal's use of bold fonts
                         new VenusUI("MARS " + Globals.version);
                     }
                 });
@@ -252,9 +256,11 @@ public class MarsLaunch {
         boolean argsOK = true;
         boolean inProgramArgumentList = false;
         programArgumentList = null;
+        
         if (args.length == 0)
-            return true; // should not get here...
-        // If the option to display MARS messages to standard erro is used,
+            return true;
+        
+        // If the option to display MARS messages to standard error is used,
         // it must be processed before any others (since messages may be
         // generated during option parsing).
         processDisplayMessagesToErrSwitch(args, displayMessagesToErrSwitch);
@@ -275,7 +281,7 @@ public class MarsLaunch {
             }
             // Once we hit "pa", all remaining command args are assumed
             // to be program arguments.
-            if (args[i].toLowerCase().equals("pa")) {
+            if (args[i].equalsIgnoreCase("pa")) {
                 inProgramArgumentList = true;
                 continue;
             }
@@ -287,7 +293,7 @@ public class MarsLaunch {
             if (args[i].toLowerCase().equals(noCopyrightSwitch)) {
                 continue;
             }
-            if (args[i].toLowerCase().equals("dump")) {
+            if (args[i].equalsIgnoreCase("dump")) {
                 if (args.length <= (i + 3)) {
                     out.println("Dump command line argument requires a segment, format and file name.");
                     argsOK = false;
@@ -299,7 +305,7 @@ public class MarsLaunch {
                 }
                 continue;
             }
-            if (args[i].toLowerCase().equals("mc")) {
+            if (args[i].equalsIgnoreCase("mc")) {
                 String configName = args[++i];
                 MemoryConfiguration config = MemoryConfigurations.getConfigurationByName(configName);
                 if (config == null) {
@@ -513,16 +519,11 @@ public class MarsLaunch {
      * Check for memory address subrange.  Has to be two integers separated
      * by "-"; no embedded spaces.  e.g. 0x00400000-0x00400010
      * If number is not multiple of 4, will be rounded up to next higher.
-     * @param arg
-     * @return
      * @throws NumberFormatException
      */
     private String[] checkMemoryAddressRange(String arg) throws NumberFormatException {
         String[] memoryRange = null;
-        if (arg.indexOf(rangeSeparator) > 0 &&
-                arg.indexOf(rangeSeparator) < arg.length() - 1) {
-            // assume correct format, two numbers separated by -, no embedded spaces.
-            // If that doesn't work it is invalid.
+        if (isValidString(arg)) {
             memoryRange = new String[2];
             memoryRange[0] = arg.substring(0, arg.indexOf(rangeSeparator));
             memoryRange[1] = arg.substring(arg.indexOf(rangeSeparator) + 1);
@@ -535,6 +536,10 @@ public class MarsLaunch {
             }
         }
         return memoryRange;
+    }
+
+    private boolean isValidString(String arg) {
+        return arg.indexOf(rangeSeparator) > 0 && arg.indexOf(rangeSeparator) < arg.length() - 1;
     }
 
     /**
@@ -647,22 +652,13 @@ public class MarsLaunch {
 
     /**
      * Formats int value for display: decimal, hex, ascii
-     * @param value
-     * @return
      */
     private String formatIntForDisplay(int value) {
-        String strValue;
         switch (displayFormat) {
-            case DECIMAL:
-                strValue = String.valueOf(value);
-                break;
-            case ASCII:
-                strValue = Binary.intToAscii(value);
-                break;
-            default:
-                strValue = Binary.intToHexString(value);
+            case DECIMAL:   return String.valueOf(value);
+            case ASCII:     return Binary.intToAscii(value);
+            default:        return Binary.intToHexString(value);
         }
-        return strValue;
     }
 
     /**
@@ -712,8 +708,6 @@ public class MarsLaunch {
      * If option to display MARS messages to standard err (System.err) is
      * present, it must be processed before all others.  Since messages may
      * be output as early as during the command parse.
-     * @param args
-     * @param displayMessagesToErrSwitch
      */
     private void processDisplayMessagesToErrSwitch(String[] args, String displayMessagesToErrSwitch) {
         for (String arg : args) {
@@ -726,8 +720,6 @@ public class MarsLaunch {
 
     /**
      * Decide whether copyright should be displayed, and display if so.
-     * @param args
-     * @param noCopyrightSwitch
      */
     private void displayCopyright(String[] args, String noCopyrightSwitch) {
         for (String arg : args) {
