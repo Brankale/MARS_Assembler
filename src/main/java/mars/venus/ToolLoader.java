@@ -8,7 +8,6 @@ import mars.tools.digital_lab_sim.DigitalLabSim;
 import mars.tools.float_representation.FloatRepresentation;
 import mars.tools.instruction_counter.InstructionCounter;
 import mars.tools.instruction_statistics.InstructionStatistics;
-import mars.tools.intro_to_tools.IntroToTools;
 import mars.tools.keyboard_display_simulator.KeyboardAndDisplaySimulator;
 import mars.tools.mars_bot.MarsBot;
 import mars.tools.memory_visualization.MemoryReferenceVisualization;
@@ -90,7 +89,6 @@ public class ToolLoader {
         //       title here since it should be declared in the corresponding class.
         //       Find a way to retrieve the title without instantiating the class.
         ArrayList<MarsToolClassAndInstance> tools = new ArrayList<>();
-        tools.add(new MarsToolClassAndInstance(IntroToTools.class, new IntroToTools()));
         tools.add(new MarsToolClassAndInstance(BHTSimulator.class, new BHTSimulator()));
         tools.add(new MarsToolClassAndInstance(BitmapDisplay.class, new BitmapDisplay()));
         tools.add(new MarsToolClassAndInstance(CacheSimulator.class, new CacheSimulator()));
