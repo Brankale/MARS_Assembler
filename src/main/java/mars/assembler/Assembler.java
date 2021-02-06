@@ -1419,7 +1419,7 @@ public class Assembler {
         }
 
         // inner-inner class to hold each entry of the forward reference list.
-        private class DataSegmentForwardReference {
+        private static class DataSegmentForwardReference {
             int patchAddress;
             int length;
             Token token;

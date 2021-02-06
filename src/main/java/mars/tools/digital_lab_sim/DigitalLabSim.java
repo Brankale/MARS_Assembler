@@ -9,8 +9,6 @@ import mars.tools.AbstractMarsToolAndApplication;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observable;
@@ -262,7 +260,7 @@ public class DigitalLabSim extends AbstractMarsToolAndApplication {
         }
     }
 
-    public class SevenSegmentPanel extends JPanel {
+    public static class SevenSegmentPanel extends JPanel {
         public SevenSegmentDisplay[] display;
 
         public SevenSegmentPanel() {

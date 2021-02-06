@@ -387,7 +387,7 @@ public class BackStepper {
     // regardless of how many steps are executed.  This will speed things up a bit
     // and make life easier for the garbage collector.
 
-    private class BackstepStack {
+    private static class BackstepStack {
         private int capacity;
         private int size;
         private int top;

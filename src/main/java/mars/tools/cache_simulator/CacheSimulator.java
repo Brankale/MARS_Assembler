@@ -10,10 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Observable;
 import java.util.Random;
 
@@ -625,7 +622,7 @@ public class CacheSimulator extends AbstractMarsToolAndApplication {
 
     //////////////////////////////////////////////////////////////////////
     // Abstract Cache class.  Subclasses will implement specific policies.
-    private abstract class AbstractCache {
+    private abstract static class AbstractCache {
         private int numberOfBlocks, blockSizeInWords, setSizeInBlocks, numberOfSets;
         protected CacheBlock[] blocks;
 

@@ -4,8 +4,6 @@ import mars.tools.MarsTool;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;

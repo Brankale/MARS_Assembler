@@ -5,9 +5,6 @@ import mars.venus.EditPane;
 import mars.venus.editors.MARSTextEditingArea;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;

@@ -373,7 +373,7 @@ public class RegistersWindow extends JPanel implements Observer {
     // the first column. From Sun's JTable tutorial.
     // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html
     //
-    private class MyTippedJTable extends JTable {
+    private static class MyTippedJTable extends JTable {
         MyTippedJTable(RegTableModel m) {
             super(m);
             this.setRowSelectionAllowed(true); // highlights background color of entire row

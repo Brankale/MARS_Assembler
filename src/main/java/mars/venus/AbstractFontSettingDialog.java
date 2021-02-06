@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
 	
 	/*
 Copyright (c) 2003-2009,  Pete Sanderson and Kenneth Vollmar

@@ -688,7 +688,7 @@ public class ProgramStatement {
             return result.toString();
         }
 
-        private class ListElement {
+        private static class ListElement {
             int type;
             String sValue;
             int iValue;

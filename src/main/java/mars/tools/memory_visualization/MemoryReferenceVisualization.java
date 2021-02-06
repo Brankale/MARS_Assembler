@@ -10,8 +10,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Observable;
 
@@ -676,7 +674,7 @@ public class MemoryReferenceVisualization extends AbstractMarsToolAndApplication
     ////////////////////////////////////////////////////////////////////////////////
     // Object that represents mapping from counter value to color it is displayed as.
     //
-    private class CounterColorScale {
+    private static class CounterColorScale {
         CounterColor[] counterColors;
 
         CounterColorScale(CounterColor[] colors) {
