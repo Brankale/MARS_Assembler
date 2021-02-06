@@ -222,11 +222,7 @@ public class SymbolTable {
      **/
 
     public ArrayList<Symbol> getAllSymbols() {
-        ArrayList<Symbol> list = new ArrayList<>();
-        for (Symbol symbol : table) {
-            list.add(symbol);
-        }
-        return list;
+        return new ArrayList<>(table);
     }
 
     /**
