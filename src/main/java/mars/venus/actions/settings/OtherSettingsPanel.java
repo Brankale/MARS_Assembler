@@ -26,66 +26,22 @@ public class OtherSettingsPanel extends JPanel {
     private JCheckBox lineHighlightCheck, autoIndentCheck;
     private Caret blinkCaret;
     private JTextField blinkSample;
-    private ButtonGroup popupGuidanceButtons;
     private JRadioButton[] popupGuidanceOptions;
-    // Flag to indicate whether any syntax style buttons have been clicked
-    // since dialog created or most recent "apply".
-    private boolean syntaxStylesAction = false;
 
-    private int initialEditorTabSize, initialCaretBlinkRate, initialPopupGuidance;
-    private boolean initialLineHighlighting, initialAutoIndent;
+    private int editorTabSize;
+    private int caretBlinkRate;
+    private int popupGuidance;
+    private boolean lineHighlighting;
+    private boolean autoIndent;
 
     public OtherSettingsPanel() {
+        retrieveCurrentSettings();
 
-        // Tab size selector
-        initialEditorTabSize = Globals.getSettings().getEditorTabSize();
-        tabSizeSelector = new JSlider(Editor.MIN_TAB_SIZE, Editor.MAX_TAB_SIZE, initialEditorTabSize);
-        tabSizeSelector.setToolTipText("Use slider to select tab size from " + Editor.MIN_TAB_SIZE + " to " + Editor.MAX_TAB_SIZE + ".");
-        tabSizeSelector.addChangeListener(
-                e -> {
-                    Integer value = ((JSlider) e.getSource()).getValue();
-                    tabSizeSpinSelector.setValue(value);
-                });
-        SpinnerNumberModel tabSizeSpinnerModel = new SpinnerNumberModel(initialEditorTabSize, Editor.MIN_TAB_SIZE, Editor.MAX_TAB_SIZE, 1);
-        tabSizeSpinSelector = new JSpinner(tabSizeSpinnerModel);
-        tabSizeSpinSelector.setToolTipText(TAB_SIZE_TOOL_TIP_TEXT);
-        tabSizeSpinSelector.addChangeListener(
-                e -> {
-                    Object value = ((JSpinner) e.getSource()).getValue();
-                    tabSizeSelector.setValue((Integer) value);
-                });
-
-        // highlighting of current line
-        initialLineHighlighting = Globals.getSettings().getBooleanSetting(Settings.EDITOR_CURRENT_LINE_HIGHLIGHTING);
-        lineHighlightCheck = new JCheckBox("Highlight the line currently being edited");
-        lineHighlightCheck.setSelected(initialLineHighlighting);
-        lineHighlightCheck.setToolTipText(CURRENT_LINE_HIGHLIGHT_TOOL_TIP_TEXT);
-
-        // auto-indent
-        initialAutoIndent = Globals.getSettings().getBooleanSetting(Settings.AUTO_INDENT);
-        autoIndentCheck = new JCheckBox("Auto-Indent");
-        autoIndentCheck.setSelected(initialAutoIndent);
-        autoIndentCheck.setToolTipText(AUTO_INDENT_TOOL_TIP_TEXT);
-
-        // cursor blink rate selector
-        initialCaretBlinkRate = Globals.getSettings().getCaretBlinkRate();
-        blinkSample = new JTextField("     ");
-        blinkSample.setCaretPosition(2);
-        blinkSample.setToolTipText(BLINK_SAMPLE_TOOL_TIP_TEXT);
-        blinkSample.setEnabled(false);
-        blinkCaret = blinkSample.getCaret();
-        blinkCaret.setBlinkRate(initialCaretBlinkRate);
-        blinkCaret.setVisible(true);
-        SpinnerNumberModel blinkRateSpinnerModel = new SpinnerNumberModel(initialCaretBlinkRate, Editor.MIN_BLINK_RATE, Editor.MAX_BLINK_RATE, 100);
-        blinkRateSpinSelector = new JSpinner(blinkRateSpinnerModel);
-        blinkRateSpinSelector.setToolTipText(BLINK_SPINNER_TOOL_TIP_TEXT);
-        blinkRateSpinSelector.addChangeListener(
-                e -> {
-                    Object value = ((JSpinner) e.getSource()).getValue();
-                    blinkCaret.setBlinkRate((Integer) value);
-                    blinkSample.requestFocus();
-                    blinkCaret.setVisible(true);
-                });
+        initTabSize();
+        initLineHighlighting();
+        initAutoIndent();
+        initCursorBlinkRate();
+        initPopupGuidance();
 
         JPanel tabPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tabPanel.add(new JLabel("Tab Size"));
@@ -106,7 +62,20 @@ public class OtherSettingsPanel extends JPanel {
 
         // Combine instruction guide off/on and instruction prefix length into radio buttons
         JPanel rightColumnSettingsPanel = new JPanel(new GridLayout(4, 1));
-        popupGuidanceButtons = new ButtonGroup();
+
+
+        popupGuidanceOptions[popupGuidance].setSelected(true);
+        rightColumnSettingsPanel.setBorder(BorderFactory.createTitledBorder("Popup Instruction Guide"));
+        rightColumnSettingsPanel.add(popupGuidanceOptions[0]);
+        rightColumnSettingsPanel.add(popupGuidanceOptions[1]);
+        rightColumnSettingsPanel.add(popupGuidanceOptions[2]);
+
+        this.add(leftColumnSettingsPanel);
+        this.add(rightColumnSettingsPanel);
+    }
+
+    private void initPopupGuidance() {
+        ButtonGroup popupGuidanceButtons = new ButtonGroup();
         popupGuidanceOptions = new JRadioButton[3];
         popupGuidanceOptions[0] = new JRadioButton("No popup instruction or directive guide");
         popupGuidanceOptions[1] = new JRadioButton("Display instruction guide after 1 letter typed");
@@ -116,18 +85,66 @@ public class OtherSettingsPanel extends JPanel {
             popupGuidanceOptions[i].setToolTipText(POPUP_GUIDANCE_TOOL_TIP_TEXT[i]);
             popupGuidanceButtons.add(popupGuidanceOptions[i]);
         }
-        initialPopupGuidance = Globals.getSettings().getBooleanSetting(Settings.POPUP_INSTRUCTION_GUIDANCE)
-                ? Globals.getSettings().getEditorPopupPrefixLength()
-                : 0;
-        popupGuidanceOptions[initialPopupGuidance].setSelected(true);
-        JPanel popupPanel = new JPanel(new GridLayout(3, 1));
-        rightColumnSettingsPanel.setBorder(BorderFactory.createTitledBorder("Popup Instruction Guide"));
-        rightColumnSettingsPanel.add(popupGuidanceOptions[0]);
-        rightColumnSettingsPanel.add(popupGuidanceOptions[1]);
-        rightColumnSettingsPanel.add(popupGuidanceOptions[2]);
+    }
 
-        this.add(leftColumnSettingsPanel);
-        this.add(rightColumnSettingsPanel);
+    private void initCursorBlinkRate() {
+        blinkSample = new JTextField("     ");
+        blinkSample.setCaretPosition(2);
+        blinkSample.setToolTipText(BLINK_SAMPLE_TOOL_TIP_TEXT);
+        blinkSample.setEnabled(false);
+        blinkCaret = blinkSample.getCaret();
+        blinkCaret.setBlinkRate(caretBlinkRate);
+        blinkCaret.setVisible(true);
+        SpinnerNumberModel blinkRateSpinnerModel = new SpinnerNumberModel(caretBlinkRate, Editor.MIN_BLINK_RATE, Editor.MAX_BLINK_RATE, 100);
+        blinkRateSpinSelector = new JSpinner(blinkRateSpinnerModel);
+        blinkRateSpinSelector.setToolTipText(BLINK_SPINNER_TOOL_TIP_TEXT);
+        blinkRateSpinSelector.addChangeListener(
+                e -> {
+                    Object value = ((JSpinner) e.getSource()).getValue();
+                    blinkCaret.setBlinkRate((Integer) value);
+                    blinkSample.requestFocus();
+                    blinkCaret.setVisible(true);
+                });
+    }
+
+    private void initTabSize() {
+        tabSizeSelector = new JSlider(Editor.MIN_TAB_SIZE, Editor.MAX_TAB_SIZE, editorTabSize);
+        tabSizeSelector.setToolTipText("Use slider to select tab size from " + Editor.MIN_TAB_SIZE + " to " + Editor.MAX_TAB_SIZE + ".");
+        tabSizeSelector.addChangeListener(
+                e -> {
+                    Integer value = ((JSlider) e.getSource()).getValue();
+                    tabSizeSpinSelector.setValue(value);
+                });
+        SpinnerNumberModel tabSizeSpinnerModel = new SpinnerNumberModel(editorTabSize, Editor.MIN_TAB_SIZE, Editor.MAX_TAB_SIZE, 1);
+        tabSizeSpinSelector = new JSpinner(tabSizeSpinnerModel);
+        tabSizeSpinSelector.setToolTipText(TAB_SIZE_TOOL_TIP_TEXT);
+        tabSizeSpinSelector.addChangeListener(
+                e -> {
+                    Object value = ((JSpinner) e.getSource()).getValue();
+                    tabSizeSelector.setValue((Integer) value);
+                });
+    }
+
+    private void initLineHighlighting() {
+        lineHighlightCheck = new JCheckBox("Highlight the line currently being edited");
+        lineHighlightCheck.setSelected(lineHighlighting);
+        lineHighlightCheck.setToolTipText(CURRENT_LINE_HIGHLIGHT_TOOL_TIP_TEXT);
+    }
+
+    private void initAutoIndent() {
+        autoIndentCheck = new JCheckBox("Auto-Indent");
+        autoIndentCheck.setSelected(autoIndent);
+        autoIndentCheck.setToolTipText(AUTO_INDENT_TOOL_TIP_TEXT);
+    }
+
+    private void retrieveCurrentSettings() {
+        Settings settings = Globals.getSettings();
+        editorTabSize = settings.getEditorTabSize();
+        lineHighlighting = settings.getBooleanSetting(Settings.EDITOR_CURRENT_LINE_HIGHLIGHTING);
+        autoIndent = settings.getBooleanSetting(Settings.AUTO_INDENT);
+        caretBlinkRate = settings.getCaretBlinkRate();
+        popupGuidance = settings.getBooleanSetting(Settings.POPUP_INSTRUCTION_GUIDANCE)
+                ? settings.getEditorPopupPrefixLength() : 0;
     }
 
 }
