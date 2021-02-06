@@ -115,23 +115,17 @@ public abstract class SwingWorker {
      * @param useSwing Set true if MARS is running from GUI, false otherwise.
      */
     public SwingWorker(final boolean useSwing) {
-        final Runnable doFinished = new Runnable() {
-            public void run() {
-                finished();
-            }
-        };
+        final Runnable doFinished = () -> finished();
 
-        Runnable doConstruct = new Runnable() {
-            public void run() {
-                try {
-                    setValue(construct());
-                } finally {
-                    threadVar.clear();
-                }
-
-                if (useSwing) SwingUtilities.invokeLater(doFinished);
-                else doFinished.run();
+        Runnable doConstruct = () -> {
+            try {
+                setValue(construct());
+            } finally {
+                threadVar.clear();
             }
+
+            if (useSwing) SwingUtilities.invokeLater(doFinished);
+            else doFinished.run();
         };
 
         // Thread that represents executing MIPS program...

@@ -97,11 +97,7 @@ public class MipsXray extends AbstractMarsToolAndApplication {
                         "Contact Marcio Roberto at marcio.rdaraujo@gmail.com with questions or comments.\n";
         JButton help = new JButton("Help");
         help.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        JOptionPane.showMessageDialog(theWindow, helpContent);
-                    }
-                });
+                e -> JOptionPane.showMessageDialog(theWindow, helpContent));
         return help;
     }
 

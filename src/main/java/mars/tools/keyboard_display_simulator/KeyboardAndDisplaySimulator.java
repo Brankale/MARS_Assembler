@@ -546,43 +546,39 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
                         "Contact Pete Sanderson at psanderson@otterbein.edu with questions or comments.\n";
         JButton help = new JButton("Help");
         help.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        JTextArea ja = new JTextArea(helpContent);
-                        ja.setRows(30);
-                        ja.setColumns(60);
-                        ja.setLineWrap(true);
-                        ja.setWrapStyleWord(true);
-                        // Make the Help dialog modeless (can remain visible while working with other components).  
-                        // Unfortunately, JOptionPane.showMessageDialog() cannot be made modeless.  I found two
-                        // workarounds:  
-                        //  (1) Use JDialog and the additional work that requires
-                        //  (2) create JOptionPane object, get JDialog from it, make the JDialog modeless
-                        // Solution 2 is shorter but requires Java 1.6.  Trying to keep MARS at 1.5.  So we
-                        // do it the hard way.  DPS 16-July-2014
-                        final JDialog d;
-                        final String title = "Simulating the Keyboard and Display";
-                        // The following is necessary because there are different JDialog constructors for Dialog and 
-                        // Frame and theWindow is declared a Window, superclass for both.
-                        d = (theWindow instanceof Dialog) ? new JDialog((Dialog) theWindow, title, false)
-                                : new JDialog((Frame) theWindow, title, false);
-                        d.setSize(ja.getPreferredSize());
-                        d.getContentPane().setLayout(new BorderLayout());
-                        d.getContentPane().add(new JScrollPane(ja), BorderLayout.CENTER);
-                        JButton b = new JButton("Close");
-                        b.addActionListener(
-                                new ActionListener() {
-                                    public void actionPerformed(ActionEvent ev) {
-                                        d.setVisible(false);
-                                        d.dispose();
-                                    }
-                                });
-                        JPanel p = new JPanel(); // Flow layout will center button.
-                        p.add(b);
-                        d.getContentPane().add(p, BorderLayout.SOUTH);
-                        d.setLocationRelativeTo(theWindow);
-                        d.setVisible(true);
-                    }
+                e -> {
+                    JTextArea ja = new JTextArea(helpContent);
+                    ja.setRows(30);
+                    ja.setColumns(60);
+                    ja.setLineWrap(true);
+                    ja.setWrapStyleWord(true);
+                    // Make the Help dialog modeless (can remain visible while working with other components).
+                    // Unfortunately, JOptionPane.showMessageDialog() cannot be made modeless.  I found two
+                    // workarounds:
+                    //  (1) Use JDialog and the additional work that requires
+                    //  (2) create JOptionPane object, get JDialog from it, make the JDialog modeless
+                    // Solution 2 is shorter but requires Java 1.6.  Trying to keep MARS at 1.5.  So we
+                    // do it the hard way.  DPS 16-July-2014
+                    final JDialog d;
+                    final String title = "Simulating the Keyboard and Display";
+                    // The following is necessary because there are different JDialog constructors for Dialog and
+                    // Frame and theWindow is declared a Window, superclass for both.
+                    d = (theWindow instanceof Dialog) ? new JDialog((Dialog) theWindow, title, false)
+                            : new JDialog((Frame) theWindow, title, false);
+                    d.setSize(ja.getPreferredSize());
+                    d.getContentPane().setLayout(new BorderLayout());
+                    d.getContentPane().add(new JScrollPane(ja), BorderLayout.CENTER);
+                    JButton b = new JButton("Close");
+                    b.addActionListener(
+                            ev -> {
+                                d.setVisible(false);
+                                d.dispose();
+                            });
+                    JPanel p = new JPanel(); // Flow layout will center button.
+                    p.add(b);
+                    d.getContentPane().add(p, BorderLayout.SOUTH);
+                    d.setLocationRelativeTo(theWindow);
+                    d.setVisible(true);
                 });
         return help;
     }
@@ -609,11 +605,7 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
         display.addComponentListener(updateDisplayBorder);
         // 	To update display of caret position in the Display text area when caret position changes.
         display.addCaretListener(
-                new CaretListener() {
-                    public void caretUpdate(CaretEvent e) {
-                        simulator.repaintDisplayPanelBorder();
-                    }
-                }
+                e -> simulator.repaintDisplayPanelBorder()
         );
 
         // 2011-07-29: Patrik Lundin, patrik@lundin.info
@@ -630,20 +622,12 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
         delayTechniqueChooser = new JComboBox<>(delayTechniques);
         delayTechniqueChooser.setToolTipText("Technique for determining simulated transmitter device processing delay");
         delayTechniqueChooser.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        transmitDelayInstructionCountLimit = generateDelay();
-                    }
-                });
+                e -> transmitDelayInstructionCountLimit = generateDelay());
         delayLengthPanel = new DelayLengthPanel();
         displayAfterDelayCheckBox = new JCheckBox("DAD", true);
         displayAfterDelayCheckBox.setToolTipText("Display After Delay: if checked, transmitter data not displayed until after delay");
         displayAfterDelayCheckBox.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        displayAfterDelay = displayAfterDelayCheckBox.isSelected();
-                    }
-                });
+                e -> displayAfterDelay = displayAfterDelayCheckBox.isSelected());
 
         //font button to display font
         fontButton = new JButton("Font");
@@ -957,27 +941,19 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
             Box controlPanel = Box.createHorizontalBox();
             JButton okButton = new JButton("OK");
             okButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            apply(getFont());
-                            closeDialog();
-                        }
+                    e -> {
+                        apply(getFont());
+                        closeDialog();
                     });
             JButton cancelButton = new JButton("Cancel");
             cancelButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            performCancel();
-                            closeDialog();
-                        }
+                    e -> {
+                        performCancel();
+                        closeDialog();
                     });
             JButton resetButton = new JButton("Reset");
             resetButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            reset();
-                        }
-                    });
+                    e -> reset());
             controlPanel.add(Box.createHorizontalGlue());
             controlPanel.add(okButton);
             controlPanel.add(Box.createHorizontalGlue());

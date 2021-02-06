@@ -89,11 +89,9 @@ public class HelpHelpAction extends GuiAction {
         //Add a "close" button to the non-modal help dialog.
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        dialog.setVisible(false);
-                        dialog.dispose();
-                    }
+                e1 -> {
+                    dialog.setVisible(false);
+                    dialog.dispose();
                 });
         JPanel closePanel = new JPanel();
         closePanel.setLayout(new BoxLayout(closePanel, BoxLayout.LINE_AXIS));
@@ -384,22 +382,20 @@ public class HelpHelpAction extends GuiAction {
                         webpagePane = new JEditorPane("text/html", cannotDisplayMessage);
                     }
                     webpagePane.addHyperlinkListener(
-                            new HyperlinkListener() {
-                                public void hyperlinkUpdate(HyperlinkEvent e) {
-                                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                                        JEditorPane pane = (JEditorPane) e.getSource();
-                                        if (e instanceof HTMLFrameHyperlinkEvent) {
-                                            HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
-                                            HTMLDocument doc = (HTMLDocument) pane.getDocument();
-                                            doc.processHTMLFrameHyperlinkEvent(evt);
-                                        } else {
-                                            try {
-                                                pane.setPage(e.getURL());
-                                            } catch (Throwable t) {
-                                                pane.setText(cannotDisplayMessage);
-                                            }
-                                            webpageURL.setText(e.getURL().toString());
+                            e12 -> {
+                                if (e12.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                                    JEditorPane pane1 = (JEditorPane) e12.getSource();
+                                    if (e12 instanceof HTMLFrameHyperlinkEvent) {
+                                        HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e12;
+                                        HTMLDocument doc = (HTMLDocument) pane1.getDocument();
+                                        doc.processHTMLFrameHyperlinkEvent(evt);
+                                    } else {
+                                        try {
+                                            pane1.setPage(e12.getURL());
+                                        } catch (Throwable t) {
+                                            pane1.setText(cannotDisplayMessage);
                                         }
+                                        webpageURL.setText(e12.getURL().toString());
                                     }
                                 }
                             });
@@ -419,11 +415,9 @@ public class HelpHelpAction extends GuiAction {
                     webpageDisplay.add(webpageScrollPane);
                     JButton closeButton = new JButton("Close");
                     closeButton.addActionListener(
-                            new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    webpageDisplay.setVisible(false);
-                                    webpageDisplay.dispose();
-                                }
+                            e1 -> {
+                                webpageDisplay.setVisible(false);
+                                webpageDisplay.dispose();
                             });
                     JPanel closePanel = new JPanel();
                     closePanel.setLayout(new BoxLayout(closePanel, BoxLayout.LINE_AXIS));

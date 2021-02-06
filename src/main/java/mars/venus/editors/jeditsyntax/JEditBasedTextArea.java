@@ -41,16 +41,14 @@ public class JEditBasedTextArea extends JEditTextArea implements MARSTextEditing
 
         // Needed to support unlimited undo/redo capability
         undoableEditListener =
-                new UndoableEditListener() {
-                    public void undoableEditHappened(UndoableEditEvent e) {
-                        //Remember the edit and update the menus.
-                        if (isCompoundEdit) {
-                            compoundEdit.addEdit(e.getEdit());
-                        } else {
-                            undoManager.addEdit(e.getEdit());
-                            editPane.updateUndoState();
-                            editPane.updateRedoState();
-                        }
+                e -> {
+                    //Remember the edit and update the menus.
+                    if (isCompoundEdit) {
+                        compoundEdit.addEdit(e.getEdit());
+                    } else {
+                        undoManager.addEdit(e.getEdit());
+                        editPane.updateUndoState();
+                        editPane.updateRedoState();
                     }
                 };
         this.getDocument().addUndoableEditListener(undoableEditListener);

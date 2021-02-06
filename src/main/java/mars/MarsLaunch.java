@@ -235,11 +235,7 @@ public class MarsLaunch {
 
         new MarsSplashScreen().showSplash();
         SwingUtilities.invokeLater(
-                new Runnable() {
-                    public void run() {
-                        new VenusUI("MARS " + Globals.version);
-                    }
-                });
+                () -> new VenusUI("MARS " + Globals.version));
     }
 
     /**

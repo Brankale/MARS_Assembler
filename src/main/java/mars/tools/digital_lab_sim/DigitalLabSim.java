@@ -154,16 +154,14 @@ public class DigitalLabSim extends AbstractMarsToolAndApplication {
                         "   (contributed by Didier Teifreto, dteifreto@lifc.univ-fcomte.fr)";
         JButton help = new JButton("Help");
         help.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        JTextArea ja = new JTextArea(helpContent);
-                        ja.setRows(20);
-                        ja.setColumns(60);
-                        ja.setLineWrap(true);
-                        ja.setWrapStyleWord(true);
-                        JOptionPane.showMessageDialog(theWindow, new JScrollPane(ja),
-                                "Simulating the Hexa Keyboard and Seven segment display", JOptionPane.INFORMATION_MESSAGE);
-                    }
+                e -> {
+                    JTextArea ja = new JTextArea(helpContent);
+                    ja.setRows(20);
+                    ja.setColumns(60);
+                    ja.setLineWrap(true);
+                    ja.setWrapStyleWord(true);
+                    JOptionPane.showMessageDialog(theWindow, new JScrollPane(ja),
+                            "Simulating the Hexa Keyboard and Seven segment display", JOptionPane.INFORMATION_MESSAGE);
                 });
         return help;
     }/* ....................Seven Segment display start here................................... */

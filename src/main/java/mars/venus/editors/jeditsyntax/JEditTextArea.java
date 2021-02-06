@@ -146,14 +146,12 @@ public class JEditTextArea extends JComponent {
         // but that seems heavy-handed.
         // DPS 12May2010
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
-                new KeyEventDispatcher() {
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        if (JEditTextArea.this.isFocusOwner() && e.getKeyCode() == KeyEvent.VK_TAB && e.getModifiers() == 0) {
-                            processKeyEvent(e);
-                            return true;
-                        } else {
-                            return false;
-                        }
+                e -> {
+                    if (JEditTextArea.this.isFocusOwner() && e.getKeyCode() == KeyEvent.VK_TAB && e.getModifiers() == 0) {
+                        processKeyEvent(e);
+                        return true;
+                    } else {
+                        return false;
                     }
                 });
 
@@ -1709,13 +1707,11 @@ public class JEditTextArea extends JComponent {
             // and the result is that scrolling doesn't stop after
             // the mouse is released
             SwingUtilities.invokeLater(
-                    new Runnable() {
-                        public void run() {
-                            if (evt.getAdjustable() == vertical)
-                                setFirstLine(vertical.getValue());
-                            else
-                                setHorizontalOffset(-horizontal.getValue());
-                        }
+                    () -> {
+                        if (evt.getAdjustable() == vertical)
+                            setFirstLine(vertical.getValue());
+                        else
+                            setHorizontalOffset(-horizontal.getValue());
                     });
         }
     }
@@ -2264,11 +2260,7 @@ public class JEditTextArea extends JComponent {
                 newPath[0] = path[0];
                 newPath[1] = (MenuElement) popupMenu.getComponent(index);
                 SwingUtilities.invokeLater(
-                        new Runnable() {
-                            public void run() {
-                                MenuSelectionManager.defaultManager().setSelectedPath(newPath);
-                            }
-                        });
+                        () -> MenuSelectionManager.defaultManager().setSelectedPath(newPath));
                 return true;
             } else {
                 return false;
