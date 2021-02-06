@@ -106,12 +106,7 @@ public class BHTEntry {
      */
     public void updatePrediction(boolean branchTaken) {
 
-        // update history
-        for (int i = 0; i < m_history.length - 1; i++) {
-            m_history[i] = m_history[i + 1];
-        }
-        m_history[m_history.length - 1] = branchTaken;
-
+        updateHistory(branchTaken);
 
         // if the prediction was correct, update stats and keep prediction
         if (branchTaken == m_prediction) {
@@ -133,6 +128,13 @@ public class BHTEntry {
                 m_prediction = !m_prediction;
 
         }
+    }
+
+    private void updateHistory(boolean branchTaken) {
+        for (int i = 0; i < m_history.length - 1; i++) {
+            m_history[i] = m_history[i + 1];
+        }
+        m_history[m_history.length - 1] = branchTaken;
     }
 
 

@@ -658,7 +658,7 @@ public class Assembler {
             errors.add(new ErrorMessage(token.getSourceMipsProgram(), token.getSourceLine(), token
                     .getStartPos(), "\"" + token.getValue()
                     + "\" directive is invalid or not implemented in MARS"));
-        } else if (direct == Directives.EQV) { /* EQV added by DPS 11 July 2012 */
+        } else if (direct == Directives.EQV) {
             // Do nothing.  This was vetted and processed during tokenizing.
         } else if (direct == Directives.MACRO) {
             if (tokens.size() < 2) {
