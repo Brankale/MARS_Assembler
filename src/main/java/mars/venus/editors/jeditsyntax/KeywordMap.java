@@ -119,7 +119,7 @@ public class KeywordMap {
     }
 
     // private members
-    class Keyword {
+    static class Keyword {
         public Keyword(char[] keyword, byte id, Keyword next) {
             this.keyword = keyword;
             this.id = id;

@@ -204,7 +204,7 @@ public class Simulator extends Observable {
      * provided by Sun Microsystems for download and is not part of the Swing library.
      */
 
-    class SimThread extends SwingWorker {
+    static class SimThread extends SwingWorker {
         private MipsProgram p;
         private int pc, maxSteps;
         private int[] breakPoints;
@@ -515,7 +515,7 @@ public class Simulator extends Observable {
 
     }
 
-    private class UpdateGUI implements Runnable {
+    private static class UpdateGUI implements Runnable {
         public void run() {
             if (Globals.getGui().getRegistersPane().getSelectedComponent() ==
                     Globals.getGui().getMainPane().getExecutePane().getRegistersWindow()) {

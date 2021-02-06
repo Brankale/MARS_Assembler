@@ -874,7 +874,7 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
     }
 
     // Delay value is fixed, and equal to slider value.
-    private class FixedLengthDelay implements TransmitterDelayTechnique {
+    private static class FixedLengthDelay implements TransmitterDelayTechnique {
         public String toString() {
             return "Fixed transmitter delay, select using slider";
         }
@@ -886,7 +886,7 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
 
     // Randomly pick value from range 1 to slider setting, uniform distribution
     // (each value has equal probability of being chosen).
-    private class UniformlyDistributedDelay implements TransmitterDelayTechnique {
+    private static class UniformlyDistributedDelay implements TransmitterDelayTechnique {
         Random randu;
 
         public UniformlyDistributedDelay() {
@@ -906,7 +906,7 @@ public class KeyboardAndDisplaySimulator extends AbstractMarsToolAndApplication 
     // Get sample from Normal(0,1) -- mean=0, s.d.=1 -- multiply it by slider
     // value, take absolute value to make sure we don't get negative,
     // add 1 to make sure we don't get 0.
-    private class NormallyDistributedDelay implements TransmitterDelayTechnique {
+    private static class NormallyDistributedDelay implements TransmitterDelayTechnique {
         Random randn;
 
         public NormallyDistributedDelay() {

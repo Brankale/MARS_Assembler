@@ -923,7 +923,7 @@ public class FloatRepresentation extends AbstractMarsToolAndApplication {
     //
     //  Use this to draw custom background in the binary fraction display.
     //
-    class BinaryFractionDisplayTextField extends JTextField {
+    static class BinaryFractionDisplayTextField extends JTextField {
 
         public BinaryFractionDisplayTextField(String value, int columns) {
             super(value, columns);

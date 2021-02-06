@@ -522,7 +522,7 @@ public class BitmapDisplay extends AbstractMarsToolAndApplication {
 
     ////////////////////////////////////////////////////////////////////////
     // Represents grid of colors
-    private class Grid {
+    private static class Grid {
 
         Color[][] grid;
         int rows, columns;

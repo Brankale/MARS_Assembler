@@ -332,7 +332,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
     /////////////////////////////////////////////////////////////////////////////
     //  The table model.
 
-    class RegTableModel extends AbstractTableModel {
+    static class RegTableModel extends AbstractTableModel {
         final String[] columnNames = {"Name", "Float", "Double"};
         Object[][] data;
 

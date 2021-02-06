@@ -86,13 +86,13 @@ public class ScavengerHunt implements Observer, MarsTool {
 
     // Used to define (X,Y) coordinate of a location to which ScavengerHunt players
     // will travel.
-    private class Location {
+    private static class Location {
         public int X;
         public int Y;
     }
 
     // private inner class to provide the data on each player needed for display
-    private class PlayerData {
+    private static class PlayerData {
         int whereAmIX = START_AND_END_LOCATION;   // Read only. Memory Address:  Base
         int whereAmIY = START_AND_END_LOCATION;   // Read only. Memory Address:  Base + 0x4
         int energy = 20;    // Read only. Memory Address:  Base + 0x18

@@ -681,7 +681,7 @@ public abstract class AbstractMarsToolAndApplication extends JFrame implements M
     //  are attached to the button at the time of the call.  Otherwise,
     //  it will call actionPerformed for the first action listener in the
     //  button's list.
-    protected class EnterKeyListener extends KeyAdapter {
+    protected static class EnterKeyListener extends KeyAdapter {
         AbstractButton myButton;
 
         public EnterKeyListener(AbstractButton who) {

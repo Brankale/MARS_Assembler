@@ -598,7 +598,7 @@ public class CacheSimulator extends AbstractMarsToolAndApplication {
     /////////////////////////////////////////////////////////////////////////
     // Represents a block in the cache.  Since we are only simulating
     // cache performance, there's no need to actually store memory contents.
-    private class CacheBlock {
+    private static class CacheBlock {
         private boolean valid;
         private int tag;
         private int sizeInWords;
@@ -617,7 +617,7 @@ public class CacheSimulator extends AbstractMarsToolAndApplication {
     // whether it was a hit or not, and in which block is the value stored.
     // In the case of a hit, the block associated with address.  In the case of
     // a miss, the block where new association is made.	DPS 23-Dec-2010
-    private class CacheAccessResult {
+    private static class CacheAccessResult {
         private boolean hitOrMiss;
         private int blockNumber;
 

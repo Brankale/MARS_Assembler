@@ -678,7 +678,7 @@ public class TextSegmentWindow extends JInternalFrame implements Observer {
     /**
      * Inner class to implement the Table model for this JTable.
      */
-    class TextTableModel extends AbstractTableModel {
+    static class TextTableModel extends AbstractTableModel {
         Object[][] data;
 
         public TextTableModel(Object[][] d) {
@@ -784,7 +784,7 @@ public class TextSegmentWindow extends JInternalFrame implements Observer {
         }
     }
 
-    private class ModifiedCode {
+    private static class ModifiedCode {
         private Integer row;
         private Object code, basic, source;
 
@@ -854,7 +854,7 @@ public class TextSegmentWindow extends JInternalFrame implements Observer {
      * Cell renderer for Machine Code column.  Alternates background color by row but otherwise is
      * same as MonoRightCellRenderer.
      */
-    class MachineCodeCellRenderer extends DefaultTableCellRenderer {
+    static class MachineCodeCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
             JLabel cell = (JLabel) super.getTableCellRendererComponent(table, value,

@@ -1166,7 +1166,7 @@ public class Memory extends Observable {
     /////////////////////////////////////////////////////////////////////////
     // Private class whose objects will represent an observable-observer pair
     // for a given memory address or range.
-    private class MemoryObservable extends Observable implements Comparable<MemoryObservable> {
+    private static class MemoryObservable extends Observable implements Comparable<MemoryObservable> {
         private int lowAddress, highAddress;
 
         public MemoryObservable(Observer obs, int startAddr, int endAddr) {

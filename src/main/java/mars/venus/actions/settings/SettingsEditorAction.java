@@ -100,7 +100,7 @@ public class SettingsEditorAction extends GuiAction {
     };
 
     // Concrete font chooser class.
-    private class EditorFontDialog extends AbstractFontSettingDialog {
+    private static class EditorFontDialog extends AbstractFontSettingDialog {
 
         private JButton[] foregroundButtons;
         private JLabel[] samples;

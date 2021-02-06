@@ -363,7 +363,7 @@ public class LabelsWindow extends JInternalFrame {
 
     ///////////////////////////////////////////////////////////////      
     // Class representing label table data 
-    class LabelTableModel extends AbstractTableModel {
+    static class LabelTableModel extends AbstractTableModel {
         String[] columns;
         Object[][] data;
 

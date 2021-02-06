@@ -231,7 +231,7 @@ public abstract class AbstractFontSettingDialog extends JDialog {
     }
 
     // Required renderer for handling the separator bar.
-    private class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+    private static class ComboBoxRenderer extends JLabel implements ListCellRenderer {
         JSeparator separator;
 
         public ComboBoxRenderer() {

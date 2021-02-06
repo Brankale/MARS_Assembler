@@ -340,7 +340,7 @@ public class BackStepper {
 
 
     // Represents a "back step" (undo action) on the stack.
-    private class BackStep {
+    private static class BackStep {
         private int action;  // what do do MEMORY_RESTORE_WORD, etc
         private int pc;      // program counter value when original step occurred
         private ProgramStatement ps;   // statement whose action is being "undone" here

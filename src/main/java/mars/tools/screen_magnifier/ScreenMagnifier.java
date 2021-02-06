@@ -736,7 +736,7 @@ class MagnifierImage extends JPanel {
      *  mouse.  The scribble is ephemeral; it is drawn but specifications
      *  are not saved.
      */
-    private class Scribbler {
+    private static class Scribbler {
         private ScribblerSettings scribblerSettings;
         private BasicStroke drawingStroke;
         // coordinates of previous mouse position 

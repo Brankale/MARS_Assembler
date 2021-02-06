@@ -279,7 +279,7 @@ public class MipsXray extends AbstractMarsToolAndApplication {
     }
 
 
-    class Vertex {
+    static class Vertex {
         private int numIndex;
         private int init;
         private int end;

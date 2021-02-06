@@ -642,7 +642,7 @@ public class ProgramStatement {
      * considered values instead of addresses because they
      * are relative to the PC.
      */
-    private class BasicStatementList {
+    private static class BasicStatementList {
 
         private ArrayList<ListElement> list;
 

@@ -279,7 +279,7 @@ public class SettingsMemoryConfigurationAction extends GuiAction {
     }
 
     // Handy class to connect button to its configuration...
-    private class ConfigurationButton extends JRadioButton {
+    private static class ConfigurationButton extends JRadioButton {
         private MemoryConfiguration configuration;
 
         public ConfigurationButton(MemoryConfiguration config) {

@@ -521,7 +521,7 @@ public class SettingsHighlightingAction extends GuiAction {
     //
     // Modal dialog to set a font.
     //
-    private class FontSettingDialog extends AbstractFontSettingDialog {
+    private static class FontSettingDialog extends AbstractFontSettingDialog {
         private boolean resultOK;
 
         public FontSettingDialog(Frame owner, String title, Font currentFont) {

@@ -1271,7 +1271,7 @@ public class Assembler {
     // ProgramStatements.
     // Sorting is based on unsigned integer value of
     // ProgramStatement.getAddress()
-    private class ProgramStatementComparator implements Comparator<ProgramStatement> {
+    private static class ProgramStatementComparator implements Comparator<ProgramStatement> {
         // Will be used to sort the collection. Unsigned int compare, because
         // all kernel 32-bit
         // addresses have 1 in high order bit, which makes the int negative.
@@ -1297,7 +1297,7 @@ public class Assembler {
     // Private class to simultaneously track addresses in both user and kernel
     // address spaces.
     // Instantiate one for data segment and one for text segment.
-    private class UserKernelAddressSpace {
+    private static class UserKernelAddressSpace {
         int[] address;
         int currentAddressSpace;
         private final int USER = 0, KERNEL = 1;
@@ -1347,7 +1347,7 @@ public class Assembler {
     // - number of bytes (addresses are 4 bytes but may be used with any of
     // the integer directives: .word, .half, .byte)
     // - the label's token. Normally need only the name but error message needs more.
-    private class DataSegmentForwardReferences {
+    private static class DataSegmentForwardReferences {
         private ArrayList<DataSegmentForwardReference> forwardReferenceList;
 
         private DataSegmentForwardReferences() {
