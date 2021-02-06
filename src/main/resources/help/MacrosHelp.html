@@ -37,7 +37,7 @@ sequence
 <pre>
 		li $v0,10
 		syscall		</pre>
-This is the macro expansion. The runtime simulator is unaware of macros or macro expansion.</p>
+<p>This is the macro expansion. The runtime simulator is unaware of macros or macro expansion.</p>
 
 <p>If running MARS from the command line, perhaps you want to return a termination value. This can be done
     with syscall 17, <tt>exit2</tt>, which takes the termination value as an argument. An equivalent macro,
@@ -60,6 +60,7 @@ the statement <tt>terminate (1)</tt> would be replaced by the three-statement se
 		syscall		</pre>
 The <i>argument value</i>, 1, is substituted wherever the formal parameter <tt>%termination_value</tt> appears
 in the macro body.
+<p>
 This is a textual substitution. Note that in this example the argument value must be an integer, not a
 register name or a label, because the parameter is used as the second operand in the Load Immediate operation.</p>
 
@@ -205,13 +206,15 @@ myLabel: .asciiz %str
     is used to substitute an arbitrary string for an identifier. It is useful but much less powerful than macros.
     It was developed independently of the macro facility.
 </p>
-<p>Using <tt>.eqv</tt>, you can specify simple substitutions that provide "define once, use many times" capability at
+
+    Using <tt>.eqv</tt>, you can specify simple substitutions that provide "define once, use many times" capability at
     assembly
     pre-processing time. For example, once you define
 <pre>
        .eqv  LIMIT      20
        .eqv  CTR        $t2
-       .eqv  CLEAR_CTR  add  CTR, $zero, 0</pre>
+       .eqv  CLEAR_CTR  add  CTR, $zero, 0
+</pre>
 then you can refer to them in subsequent code:
 <pre>
        li $v0,1
@@ -220,7 +223,8 @@ loop:  move $a0, CTR
        syscall
        add   CTR, CTR, 1
        blt   CTR, LIMIT, loop
-       CLEAR_CTR</pre>
+       CLEAR_CTR
+</pre>
 During assembly pre-processing, the <tt>.eqv</tt> substitutions will be applied. The resulting code is
 <pre>
        li   $v0,1
@@ -229,9 +233,10 @@ loop:  move $a0, $t2
        syscall
        add  $t2, $t2, 1
        blt  $t2, 20, loop
-       add  $t2, $zero, 0</pre>
+       add  $t2, $zero, 0
+</pre>
 which when run will display the values 0 through 19 on one line with no intervening spaces.
-</p>
+
 <p>Note that the substitution string is not limited to a single token. Like <tt>.macro</tt>, <tt>.eqv</tt> is local to
     the file
     in which it is defined, and must be defined prior to use. Macro bodies can contain references to <tt>.eqv</tt>
@@ -252,7 +257,7 @@ which when run will display the values 0 through 19 on one line with no interven
     in any file where you want to use them.</p>
 
 <p>The <tt>.include</tt> preprocessor will detect and flag any circular includes (file that includes itself, directly or
-    indirectly).</pp>
+    indirectly).</p>
 
 <p>The use of <tt>.include</tt> presents some challenges for error messaging and for source code numbering in the Text
     Segment display. If a file being included has any assembly errors, the filename and line number in the error
