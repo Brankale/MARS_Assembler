@@ -42,10 +42,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Sets up a window to display registers in the UI.
- *
- * @author Sanderson, Bumgarner
- **/
-
+ */
 public class Coprocessor0Window extends JPanel implements Observer {
     private static JTable table;
     private static Register[] registers;
@@ -57,15 +54,12 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private static final int NAME_COLUMN = 0;
     private static final int NUMBER_COLUMN = 1;
     private static final int VALUE_COLUMN = 2;
-    private static Settings settings;
 
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
-     **/
-
+     */
     public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
-        settings = Globals.getSettings();
         this.highlighting = false;
         table = new MyTippedJTable(new RegTableModel(setupWindow()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
@@ -84,9 +78,9 @@ public class Coprocessor0Window extends JPanel implements Observer {
      * Sets up the data for the window.
      *
      * @return The array object with the data for the window.
-     **/
-
+     */
     public Object[][] setupWindow() {
+        Settings settings = Globals.getSettings();
         registers = Coprocessor0.getRegisters();
         tableData = new Object[registers.length][3];
         rowGivenRegNumber = new int[32]; // maximum number of registers
@@ -94,7 +88,10 @@ public class Coprocessor0Window extends JPanel implements Observer {
             rowGivenRegNumber[registers[i].getNumber()] = i;
             tableData[i][0] = registers[i].getName();
             tableData[i][1] = registers[i].getNumber();
-            tableData[i][2] = NumberDisplayBaseChooser.formatNumber(registers[i].getValue(), NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX)));
+            tableData[i][2] = NumberDisplayBaseChooser.formatNumber(
+                    registers[i].getValue(),
+                    NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX))
+            );
         }
         return tableData;
     }
@@ -152,8 +149,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
      *
      * @param number The number of the register to update.
      * @param val    New value.
-     **/
-
+     */
     public void updateRegisterValue(int number, int val, int base) {
         ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(
                 NumberDisplayBaseChooser.formatNumber(val, base), rowGivenRegNumber[number], 2);
@@ -234,6 +230,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
                     isSelected, hasFocus, row, column);
             cell.setFont(font);
             cell.setHorizontalAlignment(alignment);
+            Settings settings = Globals.getSettings();
             if (settings.getBooleanSetting(Settings.REGISTERS_HIGHLIGHTING) && highlighting && row == highlightRow) {
                 cell.setBackground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_BACKGROUND));
                 cell.setForeground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_FOREGROUND));
