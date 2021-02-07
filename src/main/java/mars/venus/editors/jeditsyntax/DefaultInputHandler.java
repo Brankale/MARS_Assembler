@@ -91,6 +91,7 @@ public class DefaultInputHandler extends InputHandler {
      * @param keyBinding The key binding
      * @param action     The action
      */
+    @SuppressWarnings("unchecked")
     public void addKeyBinding(String keyBinding, ActionListener action) {
         Hashtable<KeyStroke, Object> current = bindings;
 
@@ -101,13 +102,13 @@ public class DefaultInputHandler extends InputHandler {
                 return;
 
             if (st.hasMoreTokens()) {
-                Object o = current.get(keyStroke);
-                if (o instanceof Hashtable) {
-                    current = (Hashtable) o;
+                Object obj = current.get(keyStroke);
+                if (obj instanceof Hashtable) {
+                    current = (Hashtable<KeyStroke, Object>) obj;
                 } else {
-                    o = new Hashtable();
-                    current.put(keyStroke, o);
-                    current = (Hashtable) o;
+                    obj = new Hashtable<KeyStroke,Object>();
+                    current.put(keyStroke, obj);
+                    current = (Hashtable<KeyStroke, Object>) obj;
                 }
             } else
                 current.put(keyStroke, action);
