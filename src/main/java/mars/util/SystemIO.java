@@ -39,9 +39,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * run from the command line or through the GUI, then do I/O to
  * System.in and System.out in the former situation, and interact with
  * the GUI in the latter.
- *
- * @author Pete Sanderson and Ken Vollmar
- * @version August 2003-2005
  */
 public class SystemIO {
     /**
@@ -71,7 +68,7 @@ public class SystemIO {
     private static final int STDERR = 2;
 
     // Will use one buffered reader for all keyboard/redirected/piped input.
-    // Added by DPS 28 Feb 2008.  See getInputReader() below.
+    // See getInputReader() below.
     private static BufferedReader inputReader = null;
 
     /**
@@ -81,7 +78,6 @@ public class SystemIO {
      * @param serviceNumber the number assigned to Read Int syscall (default 5)
      * @return int value corresponding to user input
      */
-
     public static int readInteger(int serviceNumber) {
         String input = "0";
         if (Globals.getGui() == null) {
@@ -109,7 +105,6 @@ public class SystemIO {
      *
      * @param serviceNumber the number assigned to Read Float syscall (default 6)
      * @return float value corresponding to user input
-     * Feb 14 2005 Ken Vollmar
      */
     public static float readFloat(int serviceNumber) {
         String input = "0";
@@ -137,7 +132,6 @@ public class SystemIO {
      *
      * @param serviceNumber the number assigned to Read Double syscall (default 7)
      * @return double value corresponding to user input
-     * 1 Aug 2005 DPS, based on Ken Vollmar's readFloat
      */
     public static double readDouble(int serviceNumber) {
         String input = "0";
@@ -200,7 +194,6 @@ public class SystemIO {
         }
 
         if (input.length() > maxLength) {
-            // Modified DPS 13-July-2011.  Originally: return input.substring(0, maxLength);
             return (maxLength <= 0) ? "" : input.substring(0, maxLength);
         } else {
             return input;
@@ -241,7 +234,6 @@ public class SystemIO {
         }
 
         return returnValue;
-
     }
 
 
@@ -253,16 +245,13 @@ public class SystemIO {
      * @param lengthRequested number of bytes to write
      * @return number of bytes written, or -1 on error
      */
-
     public static int writeToFile(int fd, byte[] myBuffer, int lengthRequested) {
-        /////////////// DPS 8-Jan-2013  ////////////////////////////////////////////////////
         /// Write to STDOUT or STDERR file descriptor while using IDE - write to Messages pane. 
         if ((fd == STDOUT || fd == STDERR) && Globals.getGui() != null) {
             String data = new String(myBuffer);
             Globals.getGui().getMessagesPane().postRunMessage(data);
             return data.length();
         }
-        ///////////////////////////////////////////////////////////////////////////////////
         //// When running in command mode, code below works for either regular file or STDOUT/STDERR
 
         if (!FileIOData.fdInUse(fd, 1)) // Check the existence of the "write" fd
@@ -273,7 +262,6 @@ public class SystemIO {
         // retrieve FileOutputStream from storage
         OutputStream outputStream = (OutputStream) FileIOData.getStreamInUse(fd);
         try {
-            // Oct. 9 2005 Ken Vollmar
             // Observation: made a call to outputStream.write(myBuffer, 0, lengthRequested)
             //     with myBuffer containing 6(ten) 32-bit-words <---> 24(ten) bytes, where the
             //     words are MIPS integers with values such that many of the bytes are ZEROES.
@@ -283,12 +271,12 @@ public class SystemIO {
             // Writes up to lengthRequested bytes of data to this output stream from an array of bytes.
             // outputStream.write(myBuffer, 0, lengthRequested); // write is a void method -- no verification value returned
 
-            // Oct. 9 2005 Ken Vollmar  Force the write statement to write exactly
+            // Force the write statement to write exactly
             // the number of bytes requested, even though those bytes include many ZERO values.
             for (int ii = 0; ii < lengthRequested; ii++) {
                 outputStream.write(myBuffer[ii]);
             }
-            outputStream.flush();// DPS 7-Jan-2013
+            outputStream.flush();
         } catch (IOException e) {
             fileErrorString = "IO Exception on write of file with fd " + fd;
             return -1;
@@ -312,7 +300,7 @@ public class SystemIO {
      */
     public static int readFromFile(int fd, byte[] myBuffer, int lengthRequested) {
         int retValue = -1;
-        /////////////// DPS 8-Jan-2013  //////////////////////////////////////////////////
+
         /// Read from STDIN file descriptor while using IDE - get input from Messages pane. 
         if (fd == STDIN && Globals.getGui() != null) {
             String input = Globals.getGui().getMessagesPane().getInputString(lengthRequested);
@@ -322,7 +310,6 @@ public class SystemIO {
             }
             return Math.min(myBuffer.length, bytesRead.length);
         }
-        ////////////////////////////////////////////////////////////////////////////////////
         //// When running in command mode, code below works for either regular file or STDIN
 
         if (!FileIOData.fdInUse(fd, 0)) // Check the existence of the "read" fd
@@ -336,7 +323,7 @@ public class SystemIO {
             // Reads up to lengthRequested bytes of data from this Input stream into an array of bytes.
             retValue = InputStream.read(myBuffer, 0, lengthRequested);
             // This method will return -1 upon EOF, but our spec says that negative
-            // value represents an error, so we return 0 for EOF.  DPS 10-July-2008.
+            // value represents an error, so we return 0 for EOF.
             if (retValue == -1) {
                 retValue = 0;
             }
@@ -359,7 +346,6 @@ public class SystemIO {
      * @param filename string containing filename
      * @param flags     0 for read, 1 for write
      * @return file descriptor in the range 0 to SYSCALL_MAXFILES-1, or -1 if error
-     * @author Ken Vollmar
      */
     public static int openFile(String filename, int flags) {
         // Internally, a "file descriptor" is an index into a table
@@ -430,12 +416,12 @@ public class SystemIO {
         return fileErrorString;
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    // Private method to simply return the BufferedReader used for
-    // keyboard input, redirected input, or piped input.
-    // These are all equivalent in the eyes of the program because they are 
-    // transparent to it.  Lazy instantiation.  DPS.  28 Feb 2008
-
+    /**
+     *  Private method to simply return the BufferedReader used for
+     *  keyboard input, redirected input, or piped input.
+     *  These are all equivalent in the eyes of the program because they are
+     *  transparent to it.  Lazy instantiation.
+     */
     private static BufferedReader getInputReader() {
         if (inputReader == null) {
             inputReader = new BufferedReader(new InputStreamReader(System.in));
@@ -443,11 +429,9 @@ public class SystemIO {
         return inputReader;
     }
 
-
-    // //////////////////////////////////////////////////////////////////////////////
-    // Maintain information on files in use. The index to the arrays is the "file descriptor."
-    // Ken Vollmar, August 2005
-
+    /**
+     * Maintain information on files in use. The index to the arrays is the "file descriptor."
+     */
     private static class FileIOData {
         private static String[] fileNames = new String[SYSCALL_MAXFILES]; // The filenames in use. Null if file descriptor i is not in use.
         private static int[] fileFlags = new int[SYSCALL_MAXFILES]; // The flags of this file, 0=READ, 1=WRITE. Invalid if this file descriptor is not in use.
@@ -461,7 +445,6 @@ public class SystemIO {
             setupStdio();
         }
 
-        // DPS 8-Jan-2013
         private static void setupStdio() {
             fileNames[STDIN] = "STDIN";
             fileNames[STDOUT] = "STDOUT";
@@ -493,14 +476,10 @@ public class SystemIO {
             for (int i = 0; i < SYSCALL_MAXFILES; i++) {
                 if (fileNames[i] != null
                         && fileNames[i].equals(requestedFilename)) {
-                    // System.out.println("Mars.SystemIO.FileIOData.filenameInUse: rtng TRUE for " + requestedFilename);
                     return true;
                 }
             }
-
-            // System.out.println("Mars.SystemIO.FileIOData.filenameInUse: rtng TRUE for " + requestedFilename);
             return false;
-
         }
 
         // Determine whether a given fd is already in use with the given flag.
@@ -580,8 +559,7 @@ public class SystemIO {
 
         }
 
-    } // end private class FileIOData
-    ////////////////////////////////////////////////////////////////////////////////
+    }
 
 
 }
