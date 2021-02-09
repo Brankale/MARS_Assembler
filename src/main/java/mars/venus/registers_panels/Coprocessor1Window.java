@@ -46,10 +46,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Sets up a window to display Coprocessor 1 registers in the Registers pane of the UI.
- *
- * @author Pete Sanderson 2005
- **/
-
+ */
 public class Coprocessor1Window extends JPanel implements ActionListener, Observer {
     private static JTable table;
     private static Register[] registers;
@@ -62,6 +59,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
     private static final int FLOAT_COLUMN = 1;
     private static final int DOUBLE_COLUMN = 2;
     private static Settings settings;
+    private final String[] columnNames = {"Name", "Float", "Double"};
 
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
@@ -72,7 +70,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
         settings = Globals.getSettings();
         // Display registers in table contained in scroll pane.
         this.setLayout(new BorderLayout()); // table display will occupy entire width if widened
-        table = new MyTippedJTable(new RegTableModel(setupWindow()));
+        table = new MyTippedJTable(new RegTableModel(columnNames, getRegistersMatrix()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(20);
         table.getColumnModel().getColumn(FLOAT_COLUMN).setPreferredWidth(70);
         table.getColumnModel().getColumn(DOUBLE_COLUMN).setPreferredWidth(130);
@@ -134,7 +132,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
      * @return The array object with the data for the window.
      **/
 
-    public Object[][] setupWindow() {
+    public Object[][] getRegistersMatrix() {
         registers = Coprocessor1.getRegisters();
         this.highlighting = false;
         tableData = new Object[registers.length][3];
@@ -224,7 +222,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
      **/
 
     public void updateFloatRegisterValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatFloatNumber(val, base), number, FLOAT_COLUMN);
+        ((RegTableModel) table.getModel()).setValueAtProgrammatically(NumberDisplayBaseChooser.formatFloatNumber(val, base), number, FLOAT_COLUMN);
 
     }
 
@@ -241,7 +239,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
             val = Coprocessor1.getLongFromRegisterPair(registers[number].getName());
         } catch (InvalidRegisterAccessException e) {
         } // happens only if number is not even
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatDoubleNumber(val, base), number, DOUBLE_COLUMN);
+        ((RegTableModel) table.getModel()).setValueAtProgrammatically(NumberDisplayBaseChooser.formatDoubleNumber(val, base), number, DOUBLE_COLUMN);
     }
 
     /**
@@ -332,61 +330,13 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
         }
     }
 
+    private static class RegTableModel extends AbstractRegTableModel {
 
-    /////////////////////////////////////////////////////////////////////////////
-    //  The table model.
-
-    static class RegTableModel extends AbstractTableModel {
-        final String[] columnNames = {"Name", "Float", "Double"};
-        Object[][] data;
-
-        public RegTableModel(Object[][] d) {
-            data = d;
+        public RegTableModel(String[] columnNames, Object[][] data) {
+            super(columnNames, data);
         }
 
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.
-         */
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        /*
-         * Float column and even-numbered rows of double column are editable.
-         */
-        public boolean isCellEditable(int row, int col) {
-            //Note that the data/cell address is constant,
-            //no matter where the cell appears onscreen.
-            if (col == FLOAT_COLUMN || (col == DOUBLE_COLUMN && row % 2 == 0)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-
-        /*
-         * Update cell contents in table model.  This method should be called
-         * only when user edits cell, so input validation has to be done.  If
-         * value is valid, MIPS register is updated.
-         */
+        @Override
         public void setValueAt(Object value, int row, int col) {
             int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
             float fVal;
@@ -415,7 +365,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
                     }
                     // have to update corresponding double display
                     int dReg = row - (row % 2);
-                    setDisplayAndModelValueAt(
+                    setValueAtProgrammatically(
                             NumberDisplayBaseChooser.formatDoubleNumber(Coprocessor1.getLongFromRegisterPair(dReg), valueBase), dReg, DOUBLE_COLUMN);
                 } else if (col == DOUBLE_COLUMN) {
                     if (Binary.isHex(sVal)) {
@@ -425,7 +375,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
                         synchronized (Globals.memoryAndRegistersLock) {
                             Coprocessor1.setRegisterPairToLong(row, lVal);
                         }
-                        setDisplayAndModelValueAt(
+                        setValueAtProgrammatically(
                                 NumberDisplayBaseChooser.formatDoubleNumber(lVal, valueBase), row, col);
                     } else { // is not hex, so must be decimal
                         dVal = Double.parseDouble(sVal);
@@ -434,13 +384,13 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
                         synchronized (Globals.memoryAndRegistersLock) {
                             Coprocessor1.setRegisterPairToDouble(row, dVal);
                         }
-                        setDisplayAndModelValueAt(
+                        setValueAtProgrammatically(
                                 NumberDisplayBaseChooser.formatNumber(dVal, valueBase), row, col);
                     }
                     // have to update corresponding float display
-                    setDisplayAndModelValueAt(
+                    setValueAtProgrammatically(
                             NumberDisplayBaseChooser.formatNumber(Coprocessor1.getValue(row), valueBase), row, FLOAT_COLUMN);
-                    setDisplayAndModelValueAt(
+                    setValueAtProgrammatically(
                             NumberDisplayBaseChooser.formatNumber(Coprocessor1.getValue(row + 1), valueBase), row + 1, FLOAT_COLUMN);
                 }
             } catch (NumberFormatException nfe) {
@@ -452,30 +402,11 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
             }
         }
 
-
-        /**
-         * Update cell contents in table model.  Does not affect MIPS register.
-         */
-        private void setDisplayAndModelValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return col == FLOAT_COLUMN || (col == DOUBLE_COLUMN && row % 2 == 0);
         }
 
-
-        // handy for debugging....
-        private void printDebugData() {
-            int numRows = getRowCount();
-            int numCols = getColumnCount();
-
-            for (int i = 0; i < numRows; i++) {
-                System.out.print("    row " + i + ":");
-                for (int j = 0; j < numCols; j++) {
-                    System.out.print("  " + data[i][j]);
-                }
-                System.out.println();
-            }
-            System.out.println("--------------------------");
-        }
     }
 
     ///////////////////////////////////////////////////////////////////

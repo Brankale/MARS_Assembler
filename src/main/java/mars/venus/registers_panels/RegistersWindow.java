@@ -1,9 +1,9 @@
 package mars.venus.registers_panels;
 
 import mars.*;
-import mars.util.*;
 import mars.simulator.*;
 import mars.mips.hardware.*;
+import mars.util.Binary;
 import mars.venus.ExecutePane;
 import mars.venus.MonoRightCellRenderer;
 import mars.venus.NumberDisplayBaseChooser;
@@ -46,10 +46,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Sets up a window to display registers in the UI.
- *
- * @author Sanderson, Bumgarner
- **/
-
+ */
 public class RegistersWindow extends JPanel implements Observer {
     private static JTable table;
     private static Register[] registers;
@@ -62,6 +59,8 @@ public class RegistersWindow extends JPanel implements Observer {
     private static final int VALUE_COLUMN = 2;
     private static Settings settings;
 
+    private final String[] columnNames = {"Name", "Number", "Value"};
+
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
      **/
@@ -70,7 +69,10 @@ public class RegistersWindow extends JPanel implements Observer {
         Simulator.getInstance().addObserver(this);
         settings = Globals.getSettings();
         this.highlighting = false;
-        table = new MyTippedJTable(new RegTableModel(setupWindow()));
+
+        RegTableModel regTableModel = new RegTableModel(columnNames, getRegistersMatrix());
+
+        table = new MyTippedJTable(regTableModel);
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
@@ -89,7 +91,7 @@ public class RegistersWindow extends JPanel implements Observer {
      * @return The array object with the data for the window.
      **/
 
-    public Object[][] setupWindow() {
+    public Object[][] getRegistersMatrix() {
         int valueBase = NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX));
         tableData = new Object[35][3];
         registers = RegisterFile.getRegisters();
@@ -172,12 +174,12 @@ public class RegistersWindow extends JPanel implements Observer {
      **/
 
     public void updateRegisterValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatNumber(val, base), number, 2);
+        ((AbstractRegTableModel) table.getModel()).setValueAtProgrammatically(NumberDisplayBaseChooser.formatNumber(val, base), number, 2);
     }
 
 
     private void updateRegisterUnsignedValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatUnsignedInteger(val, base), number, 2);
+        ((AbstractRegTableModel) table.getModel()).setValueAtProgrammatically(NumberDisplayBaseChooser.formatUnsignedInteger(val, base), number, 2);
     }
 
     /**
@@ -269,105 +271,39 @@ public class RegistersWindow extends JPanel implements Observer {
         }
     }
 
+    private static class RegTableModel extends AbstractRegTableModel {
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    static class RegTableModel extends AbstractTableModel {
-        final String[] columnNames = {"Name", "Number", "Value"};
-        Object[][] data;
-
-        public RegTableModel(Object[][] d) {
-            data = d;
+        public RegTableModel(String[] columnNames, Object[][] data) {
+            super(columnNames, data);
         }
 
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.
-         */
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
-        public boolean isCellEditable(int row, int col) {
-            //Note that the data/cell address is constant,
-            //no matter where the cell appears onscreen.
-            // these registers are not editable: $zero (0), $pc (32), $ra (31)
-            if (col == VALUE_COLUMN && row != 0 && row != 32 && row != 31) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-
-        /*
-         * Update cell contents in table model.  This method should be called
-         * only when user edits cell, so input validation has to be done.  If
-         * value is valid, MIPS register is updated.
-         */
-        public void setValueAt(Object value, int row, int col) {
-            int val = 0;
+        @Override
+        public void setValueAt(Object value, int row, int column) {
             try {
-                val = Binary.stringToInt((String) value);
-            } catch (NumberFormatException nfe) {
-                data[row][col] = "INVALID";
-                fireTableCellUpdated(row, col);
-                return;
-            }
-            //  Assures that if changed during MIPS program execution, the update will
-            //  occur only between MIPS instructions.
-            synchronized (Globals.memoryAndRegistersLock) {
-                RegisterFile.updateRegister(row, val);
-            }
-            int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
-            data[row][col] = NumberDisplayBaseChooser.formatNumber(val, valueBase);
-            fireTableCellUpdated(row, col);
-        }
+                int val = Binary.stringToInt((String) value);
 
-
-        /**
-         * Update cell contents in table model.  Does not affect MIPS register.
-         */
-        private void setDisplayAndModelValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-
-        // handy for debugging....
-        private void printDebugData() {
-            int numRows = getRowCount();
-            int numCols = getColumnCount();
-
-            for (int i = 0; i < numRows; i++) {
-                System.out.print("    row " + i + ":");
-                for (int j = 0; j < numCols; j++) {
-                    System.out.print("  " + data[i][j]);
+                // Assures that if changed during MIPS program execution,
+                // the update will occur only between MIPS instructions.
+                synchronized (Globals.memoryAndRegistersLock) {
+                    RegisterFile.updateRegister(row, val);
                 }
-                System.out.println();
+
+                int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
+                data[row][column] = NumberDisplayBaseChooser.formatNumber(val, valueBase);
+
+            } catch (NumberFormatException nfe) {
+                data[row][column] = "INVALID";
             }
-            System.out.println("--------------------------");
+
+            fireTableCellUpdated(row, column);
         }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // these registers are not editable: $zero (0), $pc (32), $ra (31)
+            return column == VALUE_COLUMN && row != 0 && row != 32 && row != 31;
+        }
+
     }
 
     ///////////////////////////////////////////////////////////////////

@@ -58,6 +58,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private static final int NAME_COLUMN = 0;
     private static final int NUMBER_COLUMN = 1;
     private static final int VALUE_COLUMN = 2;
+    private final String[] columnNames = {"Name", "Number", "Value"};
 
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
@@ -65,7 +66,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
     public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
         this.highlighting = false;
-        table = new MyTippedJTable(new RegTableModel(setupWindow()));
+        table = new MyTippedJTable(new RegTableModel(columnNames, getRegistersMatrix()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
@@ -83,7 +84,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
      *
      * @return The array object with the data for the window.
      */
-    public Object[][] setupWindow() {
+    public Object[][] getRegistersMatrix() {
         Settings settings = Globals.getSettings();
         registers = Coprocessor0.getRegisters();
         tableData = new Object[registers.length][3];
@@ -155,7 +156,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
      * @param val    New value.
      */
     public void updateRegisterValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(
+        ((RegTableModel) table.getModel()).setValueAtProgrammatically(
                 NumberDisplayBaseChooser.formatNumber(val, base), rowGivenRegNumber[number], 2);
     }
 
@@ -252,102 +253,37 @@ public class Coprocessor0Window extends JPanel implements Observer {
         }
     }
 
+    private static class RegTableModel extends AbstractRegTableModel {
 
-    static class RegTableModel extends AbstractTableModel {
-        final String[] columnNames = {"Name", "Number", "Value"};
-        Object[][] data;
-
-        public RegTableModel(Object[][] d) {
-            data = d;
+        public RegTableModel(String[] columnNames, Object[][] data) {
+            super(columnNames, data);
         }
 
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.
-         */
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
-        public boolean isCellEditable(int row, int col) {
-            //Note that the data/cell address is constant,
-            //no matter where the cell appears onscreen.
-            if (col == VALUE_COLUMN) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-
-        /*
-         * Update cell contents in table model.  This method should be called
-         * only when user edits cell, so input validation has to be done.  If
-         * value is valid, MIPS register is updated.
-         */
+        @Override
         public void setValueAt(Object value, int row, int col) {
-            int val = 0;
             try {
-                val = Binary.stringToInt((String) value);
+                int val = Binary.stringToInt((String) value);
+
+                //  Assures that if changed during MIPS program execution, the update will
+                //  occur only between MIPS instructions.
+                synchronized (Globals.memoryAndRegistersLock) {
+                    Coprocessor0.updateRegister(registers[row].getNumber(), val);
+                }
+
+                int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
+                data[row][col] = NumberDisplayBaseChooser.formatNumber(val, valueBase);
             } catch (NumberFormatException nfe) {
                 data[row][col] = "INVALID";
-                fireTableCellUpdated(row, col);
-                return;
             }
-            //  Assures that if changed during MIPS program execution, the update will
-            //  occur only between MIPS instructions.
-            synchronized (Globals.memoryAndRegistersLock) {
-                Coprocessor0.updateRegister(registers[row].getNumber(), val);
-            }
-            int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
-            data[row][col] = NumberDisplayBaseChooser.formatNumber(val, valueBase);
+
             fireTableCellUpdated(row, col);
         }
 
-
-        /**
-         * Update cell contents in table model.  Does not affect MIPS register.
-         */
-        private void setDisplayAndModelValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == VALUE_COLUMN;
         }
 
-
-        // handy for debugging....
-        private void printDebugData() {
-            int numRows = getRowCount();
-            int numCols = getColumnCount();
-
-            for (int i = 0; i < numRows; i++) {
-                System.out.print("    row " + i + ":");
-                for (int j = 0; j < numCols; j++) {
-                    System.out.print("  " + data[i][j]);
-                }
-                System.out.println();
-            }
-            System.out.println("--------------------------");
-        }
     }
 
     ///////////////////////////////////////////////////////////////////
