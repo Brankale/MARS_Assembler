@@ -1,9 +1,13 @@
-package mars.venus;
+package mars.venus.registers_panels;
 
 import mars.*;
 import mars.util.*;
 import mars.simulator.*;
 import mars.mips.hardware.*;
+import mars.venus.ExecutePane;
+import mars.venus.MonoRightCellRenderer;
+import mars.venus.NumberDisplayBaseChooser;
+import mars.venus.RunSpeedPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,32 +46,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
  * Sets up a window to display registers in the UI.
- *
- * @author Sanderson, Bumgarner
- **/
-
-public class RegistersWindow extends JPanel implements Observer {
+ */
+public class Coprocessor0Window extends JPanel implements Observer {
     private static JTable table;
     private static Register[] registers;
     private Object[][] tableData;
     private boolean highlighting;
     private int highlightRow;
     private ExecutePane executePane;
+    private int[] rowGivenRegNumber; // translate register number to table row.
     private static final int NAME_COLUMN = 0;
     private static final int NUMBER_COLUMN = 1;
     private static final int VALUE_COLUMN = 2;
-    private static Settings settings;
 
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
-     **/
-
-    public RegistersWindow() {
+     */
+    public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
-        settings = Globals.getSettings();
         this.highlighting = false;
         table = new MyTippedJTable(new RegTableModel(setupWindow()));
-        table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(25);
+        table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
         // Display register values (String-ified) right-justified in mono font
@@ -75,51 +74,43 @@ public class RegistersWindow extends JPanel implements Observer {
         table.getColumnModel().getColumn(NUMBER_COLUMN).setCellRenderer(new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT));
         table.getColumnModel().getColumn(VALUE_COLUMN).setCellRenderer(new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT));
         table.setPreferredScrollableViewportSize(new Dimension(200, 700));
-        this.setLayout(new BorderLayout()); // table display will occupy entire width if widened
-        this.add(new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        this.setLayout(new BorderLayout());  // table display will occupy entire width if widened
+        this.add(new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
     /**
      * Sets up the data for the window.
      *
      * @return The array object with the data for the window.
-     **/
-
+     */
     public Object[][] setupWindow() {
-        int valueBase = NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX));
-        tableData = new Object[35][3];
-        registers = RegisterFile.getRegisters();
+        Settings settings = Globals.getSettings();
+        registers = Coprocessor0.getRegisters();
+        tableData = new Object[registers.length][3];
+        rowGivenRegNumber = new int[32]; // maximum number of registers
         for (int i = 0; i < registers.length; i++) {
+            rowGivenRegNumber[registers[i].getNumber()] = i;
             tableData[i][0] = registers[i].getName();
             tableData[i][1] = registers[i].getNumber();
-            tableData[i][2] = NumberDisplayBaseChooser.formatNumber(registers[i].getValue(), valueBase);
+            tableData[i][2] = NumberDisplayBaseChooser.formatNumber(
+                    registers[i].getValue(),
+                    NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX))
+            );
         }
-        tableData[32][0] = "pc";
-        tableData[32][1] = "";//new Integer(32);
-        tableData[32][2] = NumberDisplayBaseChooser.formatUnsignedInteger(RegisterFile.getProgramCounter(), valueBase);
-
-        tableData[33][0] = "hi";
-        tableData[33][1] = "";//new Integer(33);
-        tableData[33][2] = NumberDisplayBaseChooser.formatNumber(RegisterFile.getValue(33), valueBase);
-
-        tableData[34][0] = "lo";
-        tableData[34][1] = "";//new Integer(34);
-        tableData[34][2] = NumberDisplayBaseChooser.formatNumber(RegisterFile.getValue(34), valueBase);
-
         return tableData;
     }
 
     /**
-     * clear and redisplay registers
+     * Reset and redisplay registers
      */
     public void clearWindow() {
         this.clearHighlighting();
-        RegisterFile.resetRegisters();
+        Coprocessor0.resetRegisters();
         this.updateRegisters(Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase());
     }
 
     /**
-     * Clear highlight background color from any cell currently highlighted.
+     * Clear highlight background color from any row currently highlighted.
      */
     public void clearHighlighting() {
         highlighting = false;
@@ -139,25 +130,22 @@ public class RegistersWindow extends JPanel implements Observer {
     }
 
     /**
-     * update register display using current number base (10 or 16)
+     * Update register display using current display base (10 or 16)
      */
     public void updateRegisters() {
-        updateRegisters(Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase());
+        this.updateRegisters(Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase());
     }
 
     /**
-     * update register display using specified number base (10 or 16)
+     * Update register display using specified display base
      *
-     * @param base desired number base
+     * @param base number base for display (10 or 16)
      */
     public void updateRegisters(int base) {
-        registers = RegisterFile.getRegisters();
+        registers = Coprocessor0.getRegisters();
         for (Register register : registers) {
-            updateRegisterValue(register.getNumber(), register.getValue(), base);
+            this.updateRegisterValue(register.getNumber(), register.getValue(), base);
         }
-        updateRegisterUnsignedValue(32, RegisterFile.getProgramCounter(), base);
-        updateRegisterValue(33, RegisterFile.getValue(33), base);
-        updateRegisterValue(34, RegisterFile.getValue(34), base);
     }
 
     /**
@@ -165,16 +153,12 @@ public class RegistersWindow extends JPanel implements Observer {
      *
      * @param number The number of the register to update.
      * @param val    New value.
-     **/
-
+     */
     public void updateRegisterValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatNumber(val, base), number, 2);
+        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(
+                NumberDisplayBaseChooser.formatNumber(val, base), rowGivenRegNumber[number], 2);
     }
 
-
-    private void updateRegisterUnsignedValue(int number, int val, int base) {
-        ((RegTableModel) table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatUnsignedInteger(val, base), number, 2);
-    }
 
     /**
      * Required by Observer interface.  Called when notified by an Observable that we are registered with.
@@ -194,18 +178,21 @@ public class RegistersWindow extends JPanel implements Observer {
                 // Simulated MIPS execution starts.  Respond to memory changes if running in timed
                 // or stepped mode.
                 if (notice.getRunSpeed() != RunSpeedPanel.UNLIMITED_SPEED || notice.getMaxSteps() == 1) {
-                    RegisterFile.addRegistersObserver(this);
+                    Coprocessor0.addRegistersObserver(this);
                     this.highlighting = true;
                 }
             } else {
                 // Simulated MIPS execution stops.  Stop responding.
-                RegisterFile.deleteRegistersObserver(this);
+                Coprocessor0.deleteRegistersObserver(this);
             }
         } else if (obj instanceof RegisterAccessNotice) {
             // NOTE: each register is a separate Observable
             RegisterAccessNotice access = (RegisterAccessNotice) obj;
             if (access.getAccessType() == AccessNotice.WRITE) {
-                // Uses the same highlighting technique as for Text Segment -- see
+                // For now, use highlighting technique used by Label Window feature to highlight
+                // memory cell corresponding to a selected label.  The highlighting is not
+                // as visually distinct as changing the background color, but will do for now.
+                // Ideally, use the same highlighting technique as for Text Segment -- see
                 // AddressCellRenderer class in DataSegmentWindow.java.
                 this.highlighting = true;
                 this.highlightCellForRegister((Register) observable);
@@ -220,11 +207,10 @@ public class RegistersWindow extends JPanel implements Observer {
      * @param register Register object corresponding to row to be selected.
      */
     void highlightCellForRegister(Register register) {
-        this.highlightRow = register.getNumber();
-        // Tell the system that table contents have changed.  This will trigger re-rendering 
-        // during which cell renderers are obtained.  The row of interest (identified by 
-        // instance variabls this.registerRow) will get a renderer
-        // with highlight background color and all others get renderer with default background. 
+        int registerRow = Coprocessor0.getRegisterPosition(register);
+        if (registerRow < 0)
+            return; // not valid coprocessor0 register
+        this.highlightRow = registerRow;
         table.tableChanged(new TableModelEvent(table.getModel()));
     }
 
@@ -248,6 +234,7 @@ public class RegistersWindow extends JPanel implements Observer {
                     isSelected, hasFocus, row, column);
             cell.setFont(font);
             cell.setHorizontalAlignment(alignment);
+            Settings settings = Globals.getSettings();
             if (settings.getBooleanSetting(Settings.REGISTERS_HIGHLIGHTING) && highlighting && row == highlightRow) {
                 cell.setBackground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_BACKGROUND));
                 cell.setForeground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_FOREGROUND));
@@ -265,8 +252,6 @@ public class RegistersWindow extends JPanel implements Observer {
         }
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////
 
     static class RegTableModel extends AbstractTableModel {
         final String[] columnNames = {"Name", "Number", "Value"};
@@ -307,8 +292,7 @@ public class RegistersWindow extends JPanel implements Observer {
         public boolean isCellEditable(int row, int col) {
             //Note that the data/cell address is constant,
             //no matter where the cell appears onscreen.
-            // these registers are not editable: $zero (0), $pc (32), $ra (31)
-            if (col == VALUE_COLUMN && row != 0 && row != 32 && row != 31) {
+            if (col == VALUE_COLUMN) {
                 return true;
             } else {
                 return false;
@@ -333,7 +317,7 @@ public class RegistersWindow extends JPanel implements Observer {
             //  Assures that if changed during MIPS program execution, the update will
             //  occur only between MIPS instructions.
             synchronized (Globals.memoryAndRegistersLock) {
-                RegisterFile.updateRegister(row, val);
+                Coprocessor0.updateRegister(registers[row].getNumber(), val);
             }
             int valueBase = Globals.getGui().getMainPane().getExecutePane().getValueDisplayBase();
             data[row][col] = NumberDisplayBaseChooser.formatNumber(val, valueBase);
@@ -381,41 +365,10 @@ public class RegistersWindow extends JPanel implements Observer {
         }
 
         private String[] regToolTips = {
-                /* $zero */  "constant 0",
-                /* $at   */  "reserved for assembler",
-                /* $v0   */  "expression evaluation and results of a function",
-                /* $v1   */  "expression evaluation and results of a function",
-                /* $a0   */  "argument 1",
-                /* $a1   */  "argument 2",
-                /* $a2   */  "argument 3",
-                /* $a3   */  "argument 4",
-                /* $t0   */  "temporary (not preserved across call)",
-                /* $t1   */  "temporary (not preserved across call)",
-                /* $t2   */  "temporary (not preserved across call)",
-                /* $t3   */  "temporary (not preserved across call)",
-                /* $t4   */  "temporary (not preserved across call)",
-                /* $t5   */  "temporary (not preserved across call)",
-                /* $t6   */  "temporary (not preserved across call)",
-                /* $t7   */  "temporary (not preserved across call)",
-                /* $s0   */  "saved temporary (preserved across call)",
-                /* $s1   */  "saved temporary (preserved across call)",
-                /* $s2   */  "saved temporary (preserved across call)",
-                /* $s3   */  "saved temporary (preserved across call)",
-                /* $s4   */  "saved temporary (preserved across call)",
-                /* $s5   */  "saved temporary (preserved across call)",
-                /* $s6   */  "saved temporary (preserved across call)",
-                /* $s7   */  "saved temporary (preserved across call)",
-                /* $t8   */  "temporary (not preserved across call)",
-                /* $t9   */  "temporary (not preserved across call)",
-                /* $k0   */  "reserved for OS kernel",
-                /* $k1   */  "reserved for OS kernel",
-                /* $gp   */  "pointer to global area",
-                /* $sp   */  "stack pointer",
-                /* $fp   */  "frame pointer",
-                /* $ra   */  "return address (used by function call)",
-                /* pc    */  "program counter",
-                /* hi    */  "high-order word of multiply product, or divide remainder",
-                /* lo    */  "low-order word of multiply product, or divide quotient"
+                /* $8  */  "Memory address at which address exception occurred",
+                /* $12 */  "Interrupt mask and enable bits",
+                /* $13 */  "Exception type and pending interrupt bits",
+                /* $14 */  "Address of instruction that caused exception"
         };
 
         //Implement table cell tool tips.
@@ -442,7 +395,7 @@ public class RegistersWindow extends JPanel implements Observer {
 
         private String[] columnToolTips = {
                 /* name */   "Each register has a tool tip describing its usage convention",
-                /* number */ "Corresponding register number",
+                /* number */ "Register number.  In your program, precede it with $",
                 /* value */  "Current 32 bit value"
         };
 

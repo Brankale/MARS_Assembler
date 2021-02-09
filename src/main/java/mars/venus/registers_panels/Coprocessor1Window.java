@@ -1,9 +1,13 @@
-package mars.venus;
+package mars.venus.registers_panels;
 
 import mars.*;
 import mars.simulator.*;
 import mars.mips.hardware.*;
 import mars.util.*;
+import mars.venus.ExecutePane;
+import mars.venus.MonoRightCellRenderer;
+import mars.venus.NumberDisplayBaseChooser;
+import mars.venus.RunSpeedPanel;
 
 import javax.swing.*;
 import java.awt.*;

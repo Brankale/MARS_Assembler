@@ -1,6 +1,9 @@
 package mars.venus;
 
 import mars.*;
+import mars.venus.registers_panels.Coprocessor0Window;
+import mars.venus.registers_panels.Coprocessor1Window;
+import mars.venus.registers_panels.RegistersWindow;
 
 import javax.swing.*;
 import java.awt.*;

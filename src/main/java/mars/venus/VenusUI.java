@@ -7,6 +7,9 @@ import mars.venus.actions.help.HelpAboutAction;
 import mars.venus.actions.help.HelpHelpAction;
 import mars.venus.actions.run.*;
 import mars.venus.actions.settings.*;
+import mars.venus.registers_panels.Coprocessor0Window;
+import mars.venus.registers_panels.Coprocessor1Window;
+import mars.venus.registers_panels.RegistersWindow;
 
 import javax.swing.*;
 import java.awt.*;
