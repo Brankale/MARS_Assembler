@@ -51,8 +51,6 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private static JTable table;
     private static Register[] registers;
     private Object[][] tableData;
-    private boolean highlighting;
-    private int highlightRow;
     private ExecutePane executePane;
     private int[] rowGivenRegNumber; // translate register number to table row.
     private static final int NAME_COLUMN = 0;
@@ -60,20 +58,27 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private static final int VALUE_COLUMN = 2;
     private final String[] columnNames = {"Name", "Number", "Value"};
 
+    // TODO: handle highlighting in MyTippedJTable
+    private final RegisterCellRenderer nameColumnCellRenderer;
+    private final RegisterCellRenderer numberColumnCellRenderer;
+    private final RegisterCellRenderer valueColumnCellRenderer;
+
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
      */
     public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
-        this.highlighting = false;
         table = new MyTippedJTable(new RegTableModel(columnNames, getTableEntries()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
         // Display register values (String-ified) right-justified in mono font
-        table.getColumnModel().getColumn(NAME_COLUMN).setCellRenderer(new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.LEFT));
-        table.getColumnModel().getColumn(NUMBER_COLUMN).setCellRenderer(new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT));
-        table.getColumnModel().getColumn(VALUE_COLUMN).setCellRenderer(new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT));
+        nameColumnCellRenderer = new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.LEFT);
+        numberColumnCellRenderer = new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT);
+        valueColumnCellRenderer = new RegisterCellRenderer(MonoRightCellRenderer.MONOSPACED_PLAIN_12POINT, SwingConstants.RIGHT);
+        table.getColumnModel().getColumn(NAME_COLUMN).setCellRenderer(nameColumnCellRenderer);
+        table.getColumnModel().getColumn(NUMBER_COLUMN).setCellRenderer(numberColumnCellRenderer);
+        table.getColumnModel().getColumn(VALUE_COLUMN).setCellRenderer(valueColumnCellRenderer);
         table.setPreferredScrollableViewportSize(new Dimension(200, 700));
         this.setLayout(new BorderLayout());  // table display will occupy entire width if widened
         this.add(new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
@@ -114,11 +119,12 @@ public class Coprocessor0Window extends JPanel implements Observer {
      * Clear highlight background color from any row currently highlighted.
      */
     public void clearHighlighting() {
-        highlighting = false;
         if (table != null) {
             table.tableChanged(new TableModelEvent(table.getModel()));
+            nameColumnCellRenderer.clearHighlighting();
+            numberColumnCellRenderer.clearHighlighting();
+            valueColumnCellRenderer.clearHighlighting();
         }
-        highlightRow = -1; // assure highlight will not occur upon re-assemble.
     }
 
     /**
@@ -180,7 +186,10 @@ public class Coprocessor0Window extends JPanel implements Observer {
                 // or stepped mode.
                 if (notice.getRunSpeed() != RunSpeedPanel.UNLIMITED_SPEED || notice.getMaxSteps() == 1) {
                     Coprocessor0.addRegistersObserver(this);
-                    this.highlighting = true;
+
+                    nameColumnCellRenderer.setHighlighting(true);
+                    numberColumnCellRenderer.setHighlighting(true);
+                    valueColumnCellRenderer.setHighlighting(true);
                 }
             } else {
                 // Simulated MIPS execution stops.  Stop responding.
@@ -195,7 +204,10 @@ public class Coprocessor0Window extends JPanel implements Observer {
                 // as visually distinct as changing the background color, but will do for now.
                 // Ideally, use the same highlighting technique as for Text Segment -- see
                 // AddressCellRenderer class in DataSegmentWindow.java.
-                this.highlighting = true;
+                nameColumnCellRenderer.setHighlighting(true);
+                numberColumnCellRenderer.setHighlighting(true);
+                valueColumnCellRenderer.setHighlighting(true);
+
                 this.highlightCellForRegister((Register) observable);
                 Globals.getGui().getRegistersPane().setSelectedComponent(this);
             }
@@ -211,46 +223,10 @@ public class Coprocessor0Window extends JPanel implements Observer {
         int registerRow = Coprocessor0.getRegisterPosition(register);
         if (registerRow < 0)
             return; // not valid coprocessor0 register
-        this.highlightRow = registerRow;
+        nameColumnCellRenderer.highlightRow(registerRow);
+        numberColumnCellRenderer.highlightRow(registerRow);
+        valueColumnCellRenderer.highlightRow(registerRow);
         table.tableChanged(new TableModelEvent(table.getModel()));
-    }
-
-    /*
-     * Cell renderer for displaying register entries.  This does highlighting, so if you
-     * don't want highlighting for a given column, don't use this.  Currently we highlight
-     * all columns.
-     */
-    private class RegisterCellRenderer extends DefaultTableCellRenderer {
-        private Font font;
-        private int alignment;
-
-        public RegisterCellRenderer(Font font, int alignment) {
-            this.font = font;
-            this.alignment = alignment;
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel cell = (JLabel) super.getTableCellRendererComponent(table, value,
-                    isSelected, hasFocus, row, column);
-            cell.setFont(font);
-            cell.setHorizontalAlignment(alignment);
-            Settings settings = Globals.getSettings();
-            if (settings.getBooleanSetting(Settings.REGISTERS_HIGHLIGHTING) && highlighting && row == highlightRow) {
-                cell.setBackground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_BACKGROUND));
-                cell.setForeground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_FOREGROUND));
-                cell.setFont(settings.getFontByPosition(Settings.REGISTER_HIGHLIGHT_FONT));
-            } else if (row % 2 == 0) {
-                cell.setBackground(settings.getColorSettingByPosition(Settings.EVEN_ROW_BACKGROUND));
-                cell.setForeground(settings.getColorSettingByPosition(Settings.EVEN_ROW_FOREGROUND));
-                cell.setFont(settings.getFontByPosition(Settings.EVEN_ROW_FONT));
-            } else {
-                cell.setBackground(settings.getColorSettingByPosition(Settings.ODD_ROW_BACKGROUND));
-                cell.setForeground(settings.getColorSettingByPosition(Settings.ODD_ROW_FOREGROUND));
-                cell.setFont(settings.getFontByPosition(Settings.ODD_ROW_FONT));
-            }
-            return cell;
-        }
     }
 
     private static class RegTableModel extends AbstractRegTableModel {
