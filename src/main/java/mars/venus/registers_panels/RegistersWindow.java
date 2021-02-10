@@ -70,7 +70,7 @@ public class RegistersWindow extends JPanel implements Observer {
         settings = Globals.getSettings();
         this.highlighting = false;
 
-        RegTableModel regTableModel = new RegTableModel(columnNames, getRegistersMatrix());
+        RegTableModel regTableModel = new RegTableModel(columnNames, getTableEntries());
 
         table = new MyTippedJTable(regTableModel);
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(25);
@@ -91,7 +91,7 @@ public class RegistersWindow extends JPanel implements Observer {
      * @return The array object with the data for the window.
      **/
 
-    public Object[][] getRegistersMatrix() {
+    public Object[][] getTableEntries() {
         int valueBase = NumberDisplayBaseChooser.getBase(settings.getBooleanSetting(Settings.DISPLAY_VALUES_IN_HEX));
         tableData = new Object[35][3];
         registers = RegisterFile.getRegisters();

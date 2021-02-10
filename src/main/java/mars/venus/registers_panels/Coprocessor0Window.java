@@ -66,7 +66,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
     public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
         this.highlighting = false;
-        table = new MyTippedJTable(new RegTableModel(columnNames, getRegistersMatrix()));
+        table = new MyTippedJTable(new RegTableModel(columnNames, getTableEntries()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
@@ -84,7 +84,7 @@ public class Coprocessor0Window extends JPanel implements Observer {
      *
      * @return The array object with the data for the window.
      */
-    public Object[][] getRegistersMatrix() {
+    public Object[][] getTableEntries() {
         Settings settings = Globals.getSettings();
         registers = Coprocessor0.getRegisters();
         tableData = new Object[registers.length][3];

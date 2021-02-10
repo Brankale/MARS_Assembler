@@ -70,7 +70,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
         settings = Globals.getSettings();
         // Display registers in table contained in scroll pane.
         this.setLayout(new BorderLayout()); // table display will occupy entire width if widened
-        table = new MyTippedJTable(new RegTableModel(columnNames, getRegistersMatrix()));
+        table = new MyTippedJTable(new RegTableModel(columnNames, getTableEntries()));
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(20);
         table.getColumnModel().getColumn(FLOAT_COLUMN).setPreferredWidth(70);
         table.getColumnModel().getColumn(DOUBLE_COLUMN).setPreferredWidth(130);
@@ -132,7 +132,7 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
      * @return The array object with the data for the window.
      **/
 
-    public Object[][] getRegistersMatrix() {
+    public Object[][] getTableEntries() {
         registers = Coprocessor1.getRegisters();
         this.highlighting = false;
         tableData = new Object[registers.length][3];
