@@ -64,6 +64,47 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
     private final RegisterCellRenderer floatColumnCellRenderer;
     private final RegisterCellRenderer doubleColumnCellRenderer;
 
+    private String[] regToolTips = {
+            /* $f0  */  "floating point subprogram return value",
+            /* $f1  */  "should not be referenced explicitly in your program",
+            /* $f2  */  "floating point subprogram return value",
+            /* $f3  */  "should not be referenced explicitly in your program",
+            /* $f4  */  "temporary (not preserved across call)",
+            /* $f5  */  "should not be referenced explicitly in your program",
+            /* $f6  */  "temporary (not preserved across call)",
+            /* $f7  */  "should not be referenced explicitly in your program",
+            /* $f8  */  "temporary (not preserved across call)",
+            /* $f9  */  "should not be referenced explicitly in your program",
+            /* $f10 */  "temporary (not preserved across call)",
+            /* $f11 */  "should not be referenced explicitly in your program",
+            /* $f12 */  "floating point subprogram argument 1",
+            /* $f13 */  "should not be referenced explicitly in your program",
+            /* $f14 */  "floating point subprogram argument 2",
+            /* $f15 */  "should not be referenced explicitly in your program",
+            /* $f16 */  "temporary (not preserved across call)",
+            /* $f17 */  "should not be referenced explicitly in your program",
+            /* $f18 */  "temporary (not preserved across call)",
+            /* $f19 */  "should not be referenced explicitly in your program",
+            /* $f20 */  "saved temporary (preserved across call)",
+            /* $f21 */  "should not be referenced explicitly in your program",
+            /* $f22 */  "saved temporary (preserved across call)",
+            /* $f23 */  "should not be referenced explicitly in your program",
+            /* $f24 */  "saved temporary (preserved across call)",
+            /* $f25 */  "should not be referenced explicitly in your program",
+            /* $f26 */  "saved temporary (preserved across call)",
+            /* $f27 */  "should not be referenced explicitly in your program",
+            /* $f28 */  "saved temporary (preserved across call)",
+            /* $f29 */  "should not be referenced explicitly in your program",
+            /* $f30 */  "saved temporary (preserved across call)",
+            /* $f31 */  "should not be referenced explicitly in your program"
+    };
+
+    private String[] columnToolTips = {
+            /* name */   "Each register has a tool tip describing its usage convention",
+            /* float */ "32-bit single precision IEEE 754 floating point register",
+            /* double */  "64-bit double precision IEEE 754 floating point register (uses a pair of 32-bit registers)"
+    };
+
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
      **/
@@ -73,7 +114,8 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
         settings = Globals.getSettings();
         // Display registers in table contained in scroll pane.
         this.setLayout(new BorderLayout()); // table display will occupy entire width if widened
-        table = new MyTippedJTable(new RegTableModel(columnNames, getTableEntries()));
+        RegTableModel tableModel = new RegTableModel(columnNames, getTableEntries());
+        table = new TippedJTable(tableModel, NAME_COLUMN, regToolTips, columnToolTips);
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(20);
         table.getColumnModel().getColumn(FLOAT_COLUMN).setPreferredWidth(70);
         table.getColumnModel().getColumn(DOUBLE_COLUMN).setPreferredWidth(130);
@@ -383,98 +425,6 @@ public class Coprocessor1Window extends JPanel implements ActionListener, Observ
             return col == FLOAT_COLUMN || (col == DOUBLE_COLUMN && row % 2 == 0);
         }
 
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    //
-    // JTable subclass to provide custom tool tips for each of the
-    // register table column headers and for each register name in 
-    // the first column. From Sun's JTable tutorial.
-    // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html
-    //
-    private static class MyTippedJTable extends JTable {
-        MyTippedJTable(RegTableModel m) {
-            super(m);
-            this.setRowSelectionAllowed(true); // highlights background color of entire row
-            this.setSelectionBackground(Color.GREEN);
-        }
-
-        private String[] regToolTips = {
-                /* $f0  */  "floating point subprogram return value",
-                /* $f1  */  "should not be referenced explicitly in your program",
-                /* $f2  */  "floating point subprogram return value",
-                /* $f3  */  "should not be referenced explicitly in your program",
-                /* $f4  */  "temporary (not preserved across call)",
-                /* $f5  */  "should not be referenced explicitly in your program",
-                /* $f6  */  "temporary (not preserved across call)",
-                /* $f7  */  "should not be referenced explicitly in your program",
-                /* $f8  */  "temporary (not preserved across call)",
-                /* $f9  */  "should not be referenced explicitly in your program",
-                /* $f10 */  "temporary (not preserved across call)",
-                /* $f11 */  "should not be referenced explicitly in your program",
-                /* $f12 */  "floating point subprogram argument 1",
-                /* $f13 */  "should not be referenced explicitly in your program",
-                /* $f14 */  "floating point subprogram argument 2",
-                /* $f15 */  "should not be referenced explicitly in your program",
-                /* $f16 */  "temporary (not preserved across call)",
-                /* $f17 */  "should not be referenced explicitly in your program",
-                /* $f18 */  "temporary (not preserved across call)",
-                /* $f19 */  "should not be referenced explicitly in your program",
-                /* $f20 */  "saved temporary (preserved across call)",
-                /* $f21 */  "should not be referenced explicitly in your program",
-                /* $f22 */  "saved temporary (preserved across call)",
-                /* $f23 */  "should not be referenced explicitly in your program",
-                /* $f24 */  "saved temporary (preserved across call)",
-                /* $f25 */  "should not be referenced explicitly in your program",
-                /* $f26 */  "saved temporary (preserved across call)",
-                /* $f27 */  "should not be referenced explicitly in your program",
-                /* $f28 */  "saved temporary (preserved across call)",
-                /* $f29 */  "should not be referenced explicitly in your program",
-                /* $f30 */  "saved temporary (preserved across call)",
-                /* $f31 */  "should not be referenced explicitly in your program"
-        };
-
-        //Implement table cell tool tips.
-        public String getToolTipText(MouseEvent e) {
-            String tip = null;
-            java.awt.Point p = e.getPoint();
-            int rowIndex = rowAtPoint(p);
-            int colIndex = columnAtPoint(p);
-            int realColumnIndex = convertColumnIndexToModel(colIndex);
-            if (realColumnIndex == NAME_COLUMN) {
-                tip = regToolTips[rowIndex];
-            /* You can customize each tip to encorporiate cell contents if you like:
-               TableModel model = getModel();
-               String regName = (String)model.getValueAt(rowIndex,0);
-            	....... etc .......
-            */
-            } else {
-                //You can omit this part if you know you don't have any 
-                //renderers that supply their own tool tips.
-                tip = super.getToolTipText(e);
-            }
-            return tip;
-        }
-
-        private String[] columnToolTips = {
-                /* name */   "Each register has a tool tip describing its usage convention",
-                /* float */ "32-bit single precision IEEE 754 floating point register",
-                /* double */  "64-bit double precision IEEE 754 floating point register (uses a pair of 32-bit registers)"
-        };
-
-        //Implement table header tool tips. 
-        protected JTableHeader createDefaultTableHeader() {
-            return
-                    new JTableHeader(columnModel) {
-                        public String getToolTipText(MouseEvent e) {
-                            String tip = null;
-                            java.awt.Point p = e.getPoint();
-                            int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            return columnToolTips[realIndex];
-                        }
-                    };
-        }
     }
 
 }

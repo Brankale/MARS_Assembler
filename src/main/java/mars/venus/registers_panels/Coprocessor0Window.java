@@ -63,12 +63,26 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private final RegisterCellRenderer numberColumnCellRenderer;
     private final RegisterCellRenderer valueColumnCellRenderer;
 
+    private final String[] regToolTips = {
+            /* $8  */  "Memory address at which address exception occurred",
+            /* $12 */  "Interrupt mask and enable bits",
+            /* $13 */  "Exception type and pending interrupt bits",
+            /* $14 */  "Address of instruction that caused exception"
+    };
+
+    private final String[] columnToolTips = {
+            /* name */   "Each register has a tool tip describing its usage convention",
+            /* number */ "Register number.  In your program, precede it with $",
+            /* value */  "Current 32 bit value"
+    };
+
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
      */
     public Coprocessor0Window() {
         Simulator.getInstance().addObserver(this);
-        table = new MyTippedJTable(new RegTableModel(columnNames, getTableEntries()));
+        RegTableModel tableModel = new RegTableModel(columnNames, getTableEntries());
+        table = new TippedJTable(tableModel, NAME_COLUMN, regToolTips, columnToolTips);
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(50);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
@@ -260,70 +274,6 @@ public class Coprocessor0Window extends JPanel implements Observer {
             return column == VALUE_COLUMN;
         }
 
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    //
-    // JTable subclass to provide custom tool tips for each of the
-    // register table column headers and for each register name in 
-    // the first column. From Sun's JTable tutorial.
-    // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html
-    //
-    private static class MyTippedJTable extends JTable {
-        MyTippedJTable(RegTableModel m) {
-            super(m);
-            this.setRowSelectionAllowed(true); // highlights background color of entire row
-            this.setSelectionBackground(Color.GREEN);
-        }
-
-        private String[] regToolTips = {
-                /* $8  */  "Memory address at which address exception occurred",
-                /* $12 */  "Interrupt mask and enable bits",
-                /* $13 */  "Exception type and pending interrupt bits",
-                /* $14 */  "Address of instruction that caused exception"
-        };
-
-        //Implement table cell tool tips.
-        public String getToolTipText(MouseEvent e) {
-            String tip = null;
-            java.awt.Point p = e.getPoint();
-            int rowIndex = rowAtPoint(p);
-            int colIndex = columnAtPoint(p);
-            int realColumnIndex = convertColumnIndexToModel(colIndex);
-            if (realColumnIndex == NAME_COLUMN) { //Register name column
-                tip = regToolTips[rowIndex];
-            /* You can customize each tip to encorporiate cell contents if you like:
-               TableModel model = getModel();
-               String regName = (String)model.getValueAt(rowIndex,0);
-            	....... etc .......
-            */
-            } else {
-                //You can omit this part if you know you don't have any 
-                //renderers that supply their own tool tips.
-                tip = super.getToolTipText(e);
-            }
-            return tip;
-        }
-
-        private String[] columnToolTips = {
-                /* name */   "Each register has a tool tip describing its usage convention",
-                /* number */ "Register number.  In your program, precede it with $",
-                /* value */  "Current 32 bit value"
-        };
-
-        //Implement table header tool tips. 
-        protected JTableHeader createDefaultTableHeader() {
-            return
-                    new JTableHeader(columnModel) {
-                        public String getToolTipText(MouseEvent e) {
-                            String tip = null;
-                            java.awt.Point p = e.getPoint();
-                            int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            return columnToolTips[realIndex];
-                        }
-                    };
-        }
     }
 
 }

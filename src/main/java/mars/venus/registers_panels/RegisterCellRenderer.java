@@ -9,8 +9,8 @@ import java.awt.*;
 
 /**
  * Cell renderer for displaying register entries.  This does highlighting, so if you
- * don't want highlighting for a given column, don't use this.  Currently we highlight
- * all columns.
+ * don't want highlighting for a given column, don't use this.
+ * Currently we highlight all columns.
  */
 public class RegisterCellRenderer extends DefaultTableCellRenderer {
 
@@ -26,6 +26,7 @@ public class RegisterCellRenderer extends DefaultTableCellRenderer {
         clearHighlighting();
     }
 
+    // TODO: I think this can be done more efficiently. Figure out how to do it.
     public Component getTableCellRendererComponent(
             JTable table,
             Object value,
@@ -38,6 +39,7 @@ public class RegisterCellRenderer extends DefaultTableCellRenderer {
                 isSelected, hasFocus, row, column);
         cell.setFont(font);
         cell.setHorizontalAlignment(alignment);
+
         Settings settings = Globals.getSettings();
         if (settings.getBooleanSetting(Settings.REGISTERS_HIGHLIGHTING) && highlighting && row == highlightedRow) {
             cell.setBackground(settings.getColorSettingByPosition(Settings.REGISTER_HIGHLIGHT_BACKGROUND));

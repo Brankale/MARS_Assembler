@@ -64,6 +64,50 @@ public class RegistersWindow extends JPanel implements Observer {
     private final RegisterCellRenderer numberColumnCellRenderer;
     private final RegisterCellRenderer valueColumnCellRenderer;
 
+    private String[] regToolTips = {
+            /* $zero */  "constant 0",
+            /* $at   */  "reserved for assembler",
+            /* $v0   */  "expression evaluation and results of a function",
+            /* $v1   */  "expression evaluation and results of a function",
+            /* $a0   */  "argument 1",
+            /* $a1   */  "argument 2",
+            /* $a2   */  "argument 3",
+            /* $a3   */  "argument 4",
+            /* $t0   */  "temporary (not preserved across call)",
+            /* $t1   */  "temporary (not preserved across call)",
+            /* $t2   */  "temporary (not preserved across call)",
+            /* $t3   */  "temporary (not preserved across call)",
+            /* $t4   */  "temporary (not preserved across call)",
+            /* $t5   */  "temporary (not preserved across call)",
+            /* $t6   */  "temporary (not preserved across call)",
+            /* $t7   */  "temporary (not preserved across call)",
+            /* $s0   */  "saved temporary (preserved across call)",
+            /* $s1   */  "saved temporary (preserved across call)",
+            /* $s2   */  "saved temporary (preserved across call)",
+            /* $s3   */  "saved temporary (preserved across call)",
+            /* $s4   */  "saved temporary (preserved across call)",
+            /* $s5   */  "saved temporary (preserved across call)",
+            /* $s6   */  "saved temporary (preserved across call)",
+            /* $s7   */  "saved temporary (preserved across call)",
+            /* $t8   */  "temporary (not preserved across call)",
+            /* $t9   */  "temporary (not preserved across call)",
+            /* $k0   */  "reserved for OS kernel",
+            /* $k1   */  "reserved for OS kernel",
+            /* $gp   */  "pointer to global area",
+            /* $sp   */  "stack pointer",
+            /* $fp   */  "frame pointer",
+            /* $ra   */  "return address (used by function call)",
+            /* pc    */  "program counter",
+            /* hi    */  "high-order word of multiply product, or divide remainder",
+            /* lo    */  "low-order word of multiply product, or divide quotient"
+    };
+
+    private String[] columnToolTips = {
+            /* name */   "Each register has a tool tip describing its usage convention",
+            /* number */ "Corresponding register number",
+            /* value */  "Current 32 bit value"
+    };
+
     /**
      * Constructor which sets up a fresh window with a table that contains the register values.
      **/
@@ -74,7 +118,7 @@ public class RegistersWindow extends JPanel implements Observer {
 
         RegTableModel regTableModel = new RegTableModel(columnNames, getTableEntries());
 
-        table = new MyTippedJTable(regTableModel);
+        table = new TippedJTable(regTableModel, NAME_COLUMN, regToolTips, columnToolTips);
         table.getColumnModel().getColumn(NAME_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(NUMBER_COLUMN).setPreferredWidth(25);
         table.getColumnModel().getColumn(VALUE_COLUMN).setPreferredWidth(60);
@@ -280,101 +324,6 @@ public class RegistersWindow extends JPanel implements Observer {
             return column == VALUE_COLUMN && row != 0 && row != 32 && row != 31;
         }
 
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    //
-    // JTable subclass to provide custom tool tips for each of the
-    // register table column headers and for each register name in 
-    // the first column. From Sun's JTable tutorial.
-    // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html
-    //
-    private static class MyTippedJTable extends JTable {
-        MyTippedJTable(RegTableModel m) {
-            super(m);
-            this.setRowSelectionAllowed(true); // highlights background color of entire row
-            this.setSelectionBackground(Color.GREEN);
-        }
-
-        private String[] regToolTips = {
-                /* $zero */  "constant 0",
-                /* $at   */  "reserved for assembler",
-                /* $v0   */  "expression evaluation and results of a function",
-                /* $v1   */  "expression evaluation and results of a function",
-                /* $a0   */  "argument 1",
-                /* $a1   */  "argument 2",
-                /* $a2   */  "argument 3",
-                /* $a3   */  "argument 4",
-                /* $t0   */  "temporary (not preserved across call)",
-                /* $t1   */  "temporary (not preserved across call)",
-                /* $t2   */  "temporary (not preserved across call)",
-                /* $t3   */  "temporary (not preserved across call)",
-                /* $t4   */  "temporary (not preserved across call)",
-                /* $t5   */  "temporary (not preserved across call)",
-                /* $t6   */  "temporary (not preserved across call)",
-                /* $t7   */  "temporary (not preserved across call)",
-                /* $s0   */  "saved temporary (preserved across call)",
-                /* $s1   */  "saved temporary (preserved across call)",
-                /* $s2   */  "saved temporary (preserved across call)",
-                /* $s3   */  "saved temporary (preserved across call)",
-                /* $s4   */  "saved temporary (preserved across call)",
-                /* $s5   */  "saved temporary (preserved across call)",
-                /* $s6   */  "saved temporary (preserved across call)",
-                /* $s7   */  "saved temporary (preserved across call)",
-                /* $t8   */  "temporary (not preserved across call)",
-                /* $t9   */  "temporary (not preserved across call)",
-                /* $k0   */  "reserved for OS kernel",
-                /* $k1   */  "reserved for OS kernel",
-                /* $gp   */  "pointer to global area",
-                /* $sp   */  "stack pointer",
-                /* $fp   */  "frame pointer",
-                /* $ra   */  "return address (used by function call)",
-                /* pc    */  "program counter",
-                /* hi    */  "high-order word of multiply product, or divide remainder",
-                /* lo    */  "low-order word of multiply product, or divide quotient"
-        };
-
-        //Implement table cell tool tips.
-        public String getToolTipText(MouseEvent e) {
-            String tip = null;
-            java.awt.Point p = e.getPoint();
-            int rowIndex = rowAtPoint(p);
-            int colIndex = columnAtPoint(p);
-            int realColumnIndex = convertColumnIndexToModel(colIndex);
-            if (realColumnIndex == NAME_COLUMN) { //Register name column
-                tip = regToolTips[rowIndex];
-            /* You can customize each tip to encorporiate cell contents if you like:
-               TableModel model = getModel();
-               String regName = (String)model.getValueAt(rowIndex,0);
-            	....... etc .......
-            */
-            } else {
-                //You can omit this part if you know you don't have any 
-                //renderers that supply their own tool tips.
-                tip = super.getToolTipText(e);
-            }
-            return tip;
-        }
-
-        private String[] columnToolTips = {
-                /* name */   "Each register has a tool tip describing its usage convention",
-                /* number */ "Corresponding register number",
-                /* value */  "Current 32 bit value"
-        };
-
-        //Implement table header tool tips. 
-        protected JTableHeader createDefaultTableHeader() {
-            return
-                    new JTableHeader(columnModel) {
-                        public String getToolTipText(MouseEvent e) {
-                            String tip = null;
-                            java.awt.Point p = e.getPoint();
-                            int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            return columnToolTips[realIndex];
-                        }
-                    };
-        }
     }
 
 }
