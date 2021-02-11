@@ -220,6 +220,8 @@ public class Settings extends Observable {
      * Font for the text editor
      */
     public static final int EDITOR_FONT = 0;
+
+    // TODO: Why should we have two fonts for even and odd rows?
     /**
      * Font for table even row background (text, data, register displays)
      */
@@ -771,7 +773,7 @@ public class Settings extends Observable {
      * Retrieve a Font setting
      *
      * @param fontSettingPosition constant that identifies which item
-     * @return Font object for given item
+     * @return Font object for given item, null if invalid position
      */
     public Font getFontByPosition(int fontSettingPosition) {
         if (fontSettingPosition >= 0 && fontSettingPosition < fontFamilySettingsValues.length) {
