@@ -4,16 +4,13 @@ import mars.*;
 import mars.util.*;
 import mars.simulator.*;
 import mars.mips.hardware.*;
-import mars.venus.ExecutePane;
 import mars.venus.MonoRightCellRenderer;
 import mars.venus.NumberDisplayBaseChooser;
 import mars.venus.RunSpeedPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
-import javax.swing.table.*;
 import javax.swing.event.*;
 
 /*
@@ -51,7 +48,6 @@ public class Coprocessor0Window extends JPanel implements Observer {
     private static JTable table;
     private static Register[] registers;
     private Object[][] tableData;
-    private ExecutePane executePane;
     private int[] rowGivenRegNumber; // translate register number to table row.
     private static final int NAME_COLUMN = 0;
     private static final int NUMBER_COLUMN = 1;
