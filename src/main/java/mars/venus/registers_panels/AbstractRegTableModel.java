@@ -44,10 +44,9 @@ public abstract class AbstractRegTableModel extends AbstractTableModel {
     }
 
     /**
-     * Use this method instead of setValueAt() if it's not a user edits.
-     * This method doesn't validate the value so performance are higher.
+     * Use this method instead of setValueAt() if it's not a user edit.
+     * This method doesn't validate the value for performance reasons.
      */
-    // TODO: find a better name for this method
     public final void setValueAtProgrammatically(Object value, int row, int column) {
         data[row][column] = value;
         fireTableCellUpdated(row, column);
@@ -61,8 +60,5 @@ public abstract class AbstractRegTableModel extends AbstractTableModel {
     public final Class<?> getColumnClass(int column) {
         return getValueAt(0, column).getClass();
     }
-
-    // TODO: isCellEditable() can be handled here adding methods
-    //       to add editable and non-editable columns/rows
 
 }
